@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -14,6 +14,7 @@ const navTheme = {
   },
 };
 function App() {
+  useEffect(() => {}, []);
   return (
     <NavigationContainer theme={navTheme}>
       <Stack.Navigator
