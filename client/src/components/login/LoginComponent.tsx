@@ -1,4 +1,5 @@
 import {
+  Button,
   Image,
   Pressable,
   StyleSheet,
@@ -6,10 +7,13 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {colors} from '../../color';
 
-function LoginComponent() {
+function LoginComponent({navigation}) {
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+  const handlePw = () => {};
   return (
     <View style={styles.container}>
       <View style={styles.logo}>
@@ -17,22 +21,29 @@ function LoginComponent() {
       </View>
       <View style={styles.loginInfo}>
         <View style={styles.id}>
-          <TextInput style={styles.idInput} placeholder="아이디" />
+          <TextInput
+            style={styles.idInput}
+            placeholder="아이디"
+            onChangeText={id}
+          />
         </View>
         <View style={styles.pw}>
-          <TextInput style={styles.pwInput} placeholder="비밀번호" />
+          <TextInput
+            style={styles.pwInput}
+            placeholder="비밀번호"
+            onChangeText={password}
+          />
         </View>
       </View>
       <View style={styles.selectMenu}>
         <View>
-          <Pressable style={styles.signUpBtn}>
-            <Text>sign up</Text>
-          </Pressable>
+          <Button
+            title="Sign Up"
+            onPress={() => navigation.navigate('SignUp')}
+          />
         </View>
         <View>
-          <Pressable style={styles.loginBtn}>
-            <Text>login</Text>
-          </Pressable>
+          <Button title="Login" onPress={() => navigation.navigate('Home')} />
         </View>
       </View>
     </View>
@@ -55,12 +66,12 @@ const styles = StyleSheet.create({
   idInput: {
     width: 245,
     height: 40,
-    backgroundColor: 'grey',
+    backgroundColor: colors.input,
   },
   pwInput: {
     width: 245,
     height: 40,
-    backgroundColor: '#ECECEC',
+    backgroundColor: colors.input,
   },
   selectMenu: {
     flexDirection: 'row',
