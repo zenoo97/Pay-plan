@@ -5,6 +5,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from './src/navigator/screen/LoginScreen';
 import SignUpScreen from './src/navigator/screen/SignUpScreen';
 import HomeScreen from './src/navigator/screen/HomeScreen';
+import 'react-native-url-polyfill/auto';
+
 const Stack = createNativeStackNavigator();
 const navTheme = {
   ...DefaultTheme,

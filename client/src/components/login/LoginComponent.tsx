@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Image,
   Pressable,
@@ -9,11 +10,22 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {colors} from '../../color';
+import {supabase} from '../../lib/supabase';
 
 function LoginComponent({navigation}) {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
-  const handlePw = () => {};
+  const loginHandler = async () => {
+    let {data: users, error} = await supabase.from('users').select('*');
+    const result = users.filter(
+      item => item.user_id === id && item.password === password,
+    );
+    if (result.length === 0) {
+      Alert.alert('아이디 혹은 비밀번호를 확인하세요.');
+    } else {
+      navigation.navigate('Home');
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.logo}>
@@ -24,14 +36,14 @@ function LoginComponent({navigation}) {
           <TextInput
             style={styles.idInput}
             placeholder="아이디"
-            onChangeText={id}
+            onChangeText={setId}
           />
         </View>
         <View style={styles.pw}>
           <TextInput
             style={styles.pwInput}
             placeholder="비밀번호"
-            onChangeText={password}
+            onChangeText={setPassword}
           />
         </View>
       </View>
@@ -43,7 +55,7 @@ function LoginComponent({navigation}) {
           />
         </View>
         <View>
-          <Button title="Login" onPress={() => navigation.navigate('Home')} />
+          <Button title="Login" onPress={loginHandler} />
         </View>
       </View>
     </View>
