@@ -10,7 +10,6 @@ function AfterMakeChallenge({userData}) {
           style={styles.circleImg}
         />
       </View>
-      <Text>챌린지 만든 이후 컴포넌트</Text>
     </View>
   );
 }

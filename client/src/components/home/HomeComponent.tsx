@@ -18,7 +18,7 @@ import DatePicker from 'react-native-date-picker';
 import {supabase} from '../../lib/supabase';
 
 function HomeComponent({navigation, userData}) {
-  console.log(userData[0]);
+  // console.log(userData[0]);
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
@@ -30,7 +30,13 @@ function HomeComponent({navigation, userData}) {
     setUsedType(type);
   };
   const addUsedMoneyInfo = async () => {
-    const {data, error} = await supabase
+    let {data: users_data, error} = await supabase
+      .from('users_data')
+      .select('*')
+
+      // Filters
+      .eq('user_id', userData[0].user_id);
+    const {data, errors} = await supabase
       .from('usedMoneyInfo')
       .insert([
         {
@@ -40,6 +46,7 @@ function HomeComponent({navigation, userData}) {
           date: date.toLocaleDateString('ko-KR'),
           used_price: usedPrice,
           type: usedType,
+          user_data_id: users_data[0].challenge_id,
         },
       ])
       .select();
