@@ -1,13 +1,4 @@
-import {
-  Alert,
-  Button,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import {Alert, Button, Image, StyleSheet, TextInput, View} from 'react-native';
 import React, {useState} from 'react';
 import {colors} from '../../color';
 import {supabase} from '../../lib/supabase';
@@ -15,48 +6,65 @@ import {supabase} from '../../lib/supabase';
 function LoginComponent({navigation}) {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+
+  const fetchUserData = async userId => {
+    let {data: users_data, error} = await supabase
+      .from('users_data')
+      .select('*')
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('데이터 조회 실패:', error.message);
+      Alert.alert(
+        '데이터 조회 실패',
+        '유저 데이터를 가져오는 데 실패했습니다.',
+      );
+      return null;
+    }
+    return users_data; // 여러 데이터를 반환
+  };
+
   const loginHandler = async () => {
-    let {data: users, error} = await supabase.from('users').select('*');
-    const result = users.filter(
-      item => item.user_id === id && item.password === password,
-    );
-    if (result.length === 0) {
+    const {data: user, error} = await supabase
+      .from('users')
+      .select('*')
+      .eq('user_id', id)
+      .eq('password', password)
+      .single(); // 한 개의 유저 데이터만 가져옴
+
+    if (error || !user) {
       Alert.alert('아이디 혹은 비밀번호를 확인하세요.');
-    } else {
-      navigation.navigate('Home');
+      return;
+    }
+
+    const userData = await fetchUserData(user.user_id);
+
+    if (userData) {
+      navigation.navigate('Home', {userData}); // 유저 데이터를 전달
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.logo}>
         <Image source={require('../../../public/images/logo.png')} />
       </View>
       <View style={styles.loginInfo}>
-        <View style={styles.id}>
-          <TextInput
-            style={styles.idInput}
-            placeholder="아이디"
-            onChangeText={setId}
-          />
-        </View>
-        <View style={styles.pw}>
-          <TextInput
-            style={styles.pwInput}
-            placeholder="비밀번호"
-            onChangeText={setPassword}
-          />
-        </View>
+        <TextInput
+          style={styles.idInput}
+          placeholder="아이디"
+          onChangeText={setId}
+        />
+        <TextInput
+          style={styles.pwInput}
+          placeholder="비밀번호"
+          secureTextEntry // 비밀번호 입력 시 보안을 위해 마스킹
+          onChangeText={setPassword}
+        />
       </View>
       <View style={styles.selectMenu}>
-        <View>
-          <Button
-            title="Sign Up"
-            onPress={() => navigation.navigate('SignUp')}
-          />
-        </View>
-        <View>
-          <Button title="Login" onPress={loginHandler} />
-        </View>
+        <Button title="Sign Up" onPress={() => navigation.navigate('SignUp')} />
+        <Button title="Login" onPress={loginHandler} />
       </View>
     </View>
   );
@@ -68,9 +76,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 50,
-  },
-  loginText: {
-    fontSize: 20,
   },
   loginInfo: {
     gap: 10,
@@ -89,11 +94,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 20,
   },
-  signUpBtn: {
-    backgroundColor: colors.btn,
-  },
-  loginBtn: {
-    backgroundColor: colors.btn,
-  },
 });
+
 export default LoginComponent;

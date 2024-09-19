@@ -6,6 +6,7 @@ import LoginScreen from './src/navigator/screen/LoginScreen';
 import SignUpScreen from './src/navigator/screen/SignUpScreen';
 import HomeScreen from './src/navigator/screen/HomeScreen';
 import 'react-native-url-polyfill/auto';
+import MakeChallenge from './src/navigator/screen/MakeChallenge';
 
 const Stack = createNativeStackNavigator();
 const navTheme = {
@@ -16,7 +17,6 @@ const navTheme = {
   },
 };
 function App() {
-  useEffect(() => {}, []);
   return (
     <NavigationContainer theme={navTheme}>
       <Stack.Navigator
@@ -27,6 +27,7 @@ function App() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="MakeChallenge" component={MakeChallenge} />
       </Stack.Navigator>
     </NavigationContainer>
   );
