@@ -1,15 +1,18 @@
-import {Button, Image, Text, View} from 'react-native';
+import {Button, Image, StyleSheet, Text, View} from 'react-native';
+import React, {Children} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
-function BeforeMakeChallenge({navigation}) {
+function BeforeMakeChallenge({userData}) {
+  const navigation = useNavigation();
   const navigateHandler = () => {
-    navigation.navigate('MakeChallenge');
+    navigation.navigate('MakeChallenge', {userData});
   };
   return (
-    <View>
+    <View style={styles.container}>
       <View>
         <Image source={require('../../../public/images/circle.png')} />
       </View>
-      <View style={{position: 'absolute', top: 140}}>
+      <View style={styles.challengeAdd}>
         <View>
           <Button title="+" onPress={navigateHandler} />
         </View>
@@ -28,4 +31,9 @@ function BeforeMakeChallenge({navigation}) {
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+  },
+});
 export default BeforeMakeChallenge;

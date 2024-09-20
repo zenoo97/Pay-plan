@@ -2,7 +2,10 @@ import {useState} from 'react';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {colors} from '../../color';
 import DatePicker from 'react-native-date-picker';
-function MakeChallengeComponent() {
+import {supabase} from '../../lib/supabase';
+import {useNavigation} from '@react-navigation/native';
+function MakeChallengeComponent({userData}) {
+  const navigation = useNavigation();
   const [challengeName, setChallengeName] = useState('');
   const [goalPeriodStart, setGoalPeriodStart] = useState('');
   const [goalPrice, setGoalPrice] = useState('');
@@ -11,6 +14,23 @@ function MakeChallengeComponent() {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
 
+  const addChallenge = async () => {
+    const {data, error} = await supabase
+      .from('users_data')
+      .insert([
+        {
+          challenge_name: challengeName,
+          goal_price: goalPrice,
+          user_id: userData[0].user_id,
+          goal_period_start: date.toLocaleDateString('ko-KR'),
+          goal_period_end: date.toLocaleDateString('ko-KR'),
+        },
+      ])
+      .select();
+    if (!error) {
+      navigation.navigate('Home');
+    }
+  };
   return (
     <View style={styles.container}>
       <View>
@@ -64,7 +84,7 @@ function MakeChallengeComponent() {
           </View>
         </View>
         <View style={styles.endBtn}>
-          <Button title="완 료" />
+          <Button title="추가하기" onPress={addChallenge} />
         </View>
       </View>
     </View>

@@ -2,8 +2,9 @@ import {Alert, Button, Image, StyleSheet, TextInput, View} from 'react-native';
 import React, {useState} from 'react';
 import {colors} from '../../color';
 import {supabase} from '../../lib/supabase';
-
-function LoginComponent({navigation}) {
+import {useNavigation} from '@react-navigation/native';
+function LoginComponent() {
+  const navigation = useNavigation();
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
 

@@ -6,6 +6,7 @@ import LoginScreen from './src/navigator/screen/LoginScreen';
 import SignUpScreen from './src/navigator/screen/SignUpScreen';
 import HomeScreen from './src/navigator/screen/HomeScreen';
 import 'react-native-url-polyfill/auto';
+import MakeChallengeComponent from './src/components/home/MakeChallengeComponent';
 import MakeChallenge from './src/navigator/screen/MakeChallenge';
 
 const Stack = createNativeStackNavigator();

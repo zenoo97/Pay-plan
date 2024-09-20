@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   Alert,
   Button,
-  Image,
   Modal,
   Pressable,
   StyleSheet,
@@ -53,8 +52,8 @@ function HomeComponent({navigation, userData}) {
   };
   return (
     <View style={styles.container}>
-      {userData.length === 0 ? (
-        <BeforeMakeChallenge />
+      {userData.length !== 0 ? (
+        <BeforeMakeChallenge userData={userData} />
       ) : (
         <AfterMakeChallenge userData={userData} />
       )}
