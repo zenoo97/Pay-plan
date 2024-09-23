@@ -4,6 +4,8 @@ import {colors} from '../../color';
 import DatePicker from 'react-native-date-picker';
 import {supabase} from '../../lib/supabase';
 import {useNavigation} from '@react-navigation/native';
+import {useUserStore} from '../../store/getUser';
+import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
 function MakeChallengeComponent({userData}) {
   const navigation = useNavigation();
   const [challengeName, setChallengeName] = useState('');
@@ -13,22 +15,36 @@ function MakeChallengeComponent({userData}) {
   const [userPassword, setUserPassWord] = useState('');
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-
+  const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
   const addChallenge = async () => {
     const {data, error} = await supabase
-      .from('users_data')
+      .from('users_maked_challenge')
       .insert([
         {
           challenge_name: challengeName,
           goal_price: goalPrice,
-          user_id: userData[0].user_id,
+          user_id: userData[0].user_id, // user_id를 userData에서 가져옵니다
           goal_period_start: date.toLocaleDateString('ko-KR'),
           goal_period_end: date.toLocaleDateString('ko-KR'),
         },
       ])
       .select();
+
+    addMakedChallenge(data[0]);
     if (!error) {
-      navigation.navigate('Home');
+      const {data: user_data, error: updateError} = await supabase
+        .from('users')
+        .update({current_challenge_num: data[0].challenge_id})
+        .eq('user_id', userData[0].user_id) // user_id를 직접 문자열로 사용
+        .select();
+
+      if (updateError) {
+        console.log(updateError);
+      } else {
+        navigation.navigate('Home', {userData, user_data});
+      }
+    } else {
+      console.log(error);
     }
   };
   return (
@@ -42,7 +58,11 @@ function MakeChallengeComponent({userData}) {
             <Text style={styles.inputTitleText}>챌린지 이름</Text>
           </View>
           <View>
-            <TextInput style={styles.goalPriceInput} />
+            <TextInput
+              style={styles.goalPriceInput}
+              value={challengeName}
+              onChangeText={setChallengeName}
+            />
           </View>
         </View>
         <View>
@@ -68,7 +88,7 @@ function MakeChallengeComponent({userData}) {
               />
             </View>
             <View>
-              <TextInput style={styles.goalPeriodEndInput} />
+              <TextInput style={styles.goalPeriodEndInput} value={date} />
             </View>
           </View>
           <View>
@@ -80,7 +100,11 @@ function MakeChallengeComponent({userData}) {
             <Text style={styles.inputTitleText}>목표 금액</Text>
           </View>
           <View>
-            <TextInput style={styles.goalPriceInput} />
+            <TextInput
+              style={styles.goalPriceInput}
+              value={goalPrice}
+              onChangeText={setGoalPrice}
+            />
           </View>
         </View>
         <View style={styles.endBtn}>

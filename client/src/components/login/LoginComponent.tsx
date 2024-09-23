@@ -3,45 +3,103 @@ import React, {useState} from 'react';
 import {colors} from '../../color';
 import {supabase} from '../../lib/supabase';
 import {useNavigation} from '@react-navigation/native';
+import {useUserStore} from '../../store/getUser';
+
 function LoginComponent() {
   const navigation = useNavigation();
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const userData = useUserStore(state => state.userData);
 
+  const addUser = useUserStore(state => state.addUser); // 수정된 부분
+  const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
+  const addUsedData = useUserStore(state => state.addUsedData);
   const fetchUserData = async userId => {
-    let {data: users_data, error} = await supabase
-      .from('users_data')
-      .select('*')
-      .eq('user_id', userId);
+    try {
+      let {data: users_data, error} = await supabase
+        .from('users')
+        .select('*')
+        .eq('user_id', userId);
 
-    if (error) {
-      console.error('데이터 조회 실패:', error.message);
+      if (error) {
+        console.error('데이터 조회 실패:', error.message);
+        Alert.alert(
+          '데이터 조회 실패',
+          '유저 데이터를 가져오는 데 실패했습니다.',
+        );
+        return null;
+      }
+      return users_data; // 여러 데이터를 반환
+    } catch (err) {
+      console.error('fetchUserData 에러:', err);
       Alert.alert(
-        '데이터 조회 실패',
-        '유저 데이터를 가져오는 데 실패했습니다.',
+        '서버 오류',
+        '유저 데이터를 가져오는 중 오류가 발생했습니다.',
       );
       return null;
     }
-    return users_data; // 여러 데이터를 반환
   };
-
-  const loginHandler = async () => {
-    const {data: user, error} = await supabase
-      .from('users')
+  const getUserChallengeList = async user_data => {
+    let {data: user_maked_challenge_data, error} = await supabase
+      .from('users_maked_challenge')
       .select('*')
-      .eq('user_id', id)
-      .eq('password', password)
-      .single(); // 한 개의 유저 데이터만 가져옴
+      .eq('user_id', user_data[0].user_id);
+    if (user_maked_challenge_data === null) return 0;
+    else return user_maked_challenge_data;
+  };
+  const getUserUsedList = async userData => {
+    // console.log(userData);
+    let {data: users_data, error} = await supabase
+      .from('users_maked_challenge')
+      .select('*')
+      // Filters
+      .eq('user_id', userData[0].user_id);
 
-    if (error || !user) {
-      Alert.alert('아이디 혹은 비밀번호를 확인하세요.');
-      return;
-    }
+    // console.log(users_data, 'asd');
+    let {data: usedMoneyInfo, errors} = await supabase
+      .from('usedMoneyInfo')
+      .select('*')
+      .eq('user_data_id', users_data[0]?.challenge_id);
+    if (usedMoneyInfo === null) return 0;
+    else return usedMoneyInfo;
+  };
+  const loginHandler = async () => {
+    try {
+      const {data: user, error} = await supabase
+        .from('users')
+        .select('*')
+        .eq('user_id', id)
+        .eq('password', password)
+        .single();
 
-    const userData = await fetchUserData(user.user_id);
+      if (error || !user) {
+        Alert.alert('아이디 혹은 비밀번호를 확인하세요.');
+        return;
+      }
 
-    if (userData) {
-      navigation.navigate('Home', {userData}); // 유저 데이터를 전달
+      const user_data = await fetchUserData(user.user_id);
+
+      // user_data가 null인지 확인
+      if (!user_data || user_data.length === 0) {
+        Alert.alert('유저 데이터가 없습니다.');
+        return;
+      }
+
+      const challengeData = await getUserChallengeList(user_data);
+      const usedData = await getUserUsedList(user_data);
+
+      // console.log(challengeData);
+      // console.log(usedData);
+
+      if (challengeData.length !== 0) addMakedChallenge(challengeData);
+      if (usedData !== 0) addUsedData(usedData);
+      addUser(user_data);
+
+      // 로그인 후 Home으로 이동
+      navigation.navigate('Home', {userData: user_data});
+    } catch (err) {
+      console.error('loginHandler 에러:', err);
+      Alert.alert('로그인 오류', '로그인 중 오류가 발생했습니다.');
     }
   };
 
@@ -59,7 +117,7 @@ function LoginComponent() {
         <TextInput
           style={styles.pwInput}
           placeholder="비밀번호"
-          secureTextEntry // 비밀번호 입력 시 보안을 위해 마스킹
+          secureTextEntry
           onChangeText={setPassword}
         />
       </View>

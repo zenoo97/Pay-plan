@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Button,
@@ -15,32 +15,38 @@ import AfterMakeChallenge from './AfterMakeChallenge';
 import {colors} from '../../color';
 import DatePicker from 'react-native-date-picker';
 import {supabase} from '../../lib/supabase';
+import {useUserStore} from '../../store/getUser';
 
-function HomeComponent({navigation, userData}) {
-  // console.log(userData[0]);
+function HomeComponent({userData, users}) {
+  const userChallengeList = useUserStore(state => state.userChallengeList);
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [usedType, setUsedType] = useState('');
   const [title, setTitle] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
   const [usedPrice, setUsedPrice] = useState('');
+
   const handlePaymentTypeSelect = type => {
     setUsedType(type);
   };
+
   const addUsedMoneyInfo = async () => {
     let {data: users_data, error} = await supabase
-      .from('users_data')
+      .from('users_maked_challenge')
       .select('*')
+      .eq('user_id', userData[0]?.user_id);
 
-      // Filters
-      .eq('user_id', userData[0].user_id);
+    if (error) {
+      console.error('Error fetching users data:', error);
+      return;
+    }
+
     const {data, errors} = await supabase
       .from('usedMoneyInfo')
       .insert([
         {
-          user_id: userData[0].user_id,
-          user_password: userData[0].user_password,
+          user_id: userData[0]?.user_id,
+          user_password: userData[0]?.user_password,
           title: title,
           date: date.toLocaleDateString('ko-KR'),
           used_price: usedPrice,
@@ -49,10 +55,19 @@ function HomeComponent({navigation, userData}) {
         },
       ])
       .select();
+
+    if (errors) {
+      console.error('Error inserting used money info:', errors);
+    }
   };
+
+  useEffect(() => {
+    // getUsersData();
+  }, [userChallengeList]);
+
   return (
     <View style={styles.container}>
-      {userData.length !== 0 ? (
+      {userChallengeList?.length === 0 ? (
         <BeforeMakeChallenge userData={userData} />
       ) : (
         <AfterMakeChallenge userData={userData} />
@@ -174,16 +189,18 @@ function HomeComponent({navigation, userData}) {
     </View>
   );
 }
+
 export default HomeComponent;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1, // 부모 컨테이너가 전체 화면을 차지하도록 함
     alignItems: 'center',
     paddingVertical: 20,
   },
   bottomBtnContainer: {
     position: 'absolute',
-    bottom: -150,
+    bottom: 20, // 원하는 위치로 조정
     right: 20,
   },
   bottomBtn: {

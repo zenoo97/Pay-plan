@@ -7,14 +7,14 @@ function ListComponent({userData}) {
   const [userChallengeList, setUserChallengeList] = useState([]);
   const getUserChallengeList = async () => {
     let {data: users_data, error} = await supabase
-      .from('users_data')
+      .from('users_maked_challenge')
       .select('*')
       .eq('user_id', userData[0].user_id);
     setUserChallengeList(users_data);
   };
   const getUserUsedList = async () => {
     let {data: users_data, error} = await supabase
-      .from('users_data')
+      .from('users_maked_challenge')
       .select('*')
       // Filters
       .eq('user_id', userData[0].user_id);

@@ -8,13 +8,13 @@ import MoreComponent from '../../components/more/MoreComponent';
 const Tab = createBottomTabNavigator();
 
 function HomeScreen({route}) {
-  const {userData} = route.params; // userData를 가져옵니다
-
+  const {userData, users} = route?.params; // userData를 가져옵니다
+  console.log(users);
   return (
     <Tab.Navigator screenOptions={{headerShown: false}}>
       <Tab.Screen
         name="Home"
-        children={() => <HomeComponent userData={userData} />} // userData를 전달
+        children={() => <HomeComponent userData={userData} users={users} />} // userData를 전달
       />
       <Tab.Screen
         name="List"
