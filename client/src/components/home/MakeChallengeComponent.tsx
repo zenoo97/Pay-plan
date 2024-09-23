@@ -5,7 +5,7 @@ import DatePicker from 'react-native-date-picker';
 import {supabase} from '../../lib/supabase';
 import {useNavigation} from '@react-navigation/native';
 import {useUserStore} from '../../store/getUser';
-import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
+
 function MakeChallengeComponent({userData}) {
   const navigation = useNavigation();
   const [challengeName, setChallengeName] = useState('');
@@ -30,7 +30,8 @@ function MakeChallengeComponent({userData}) {
       ])
       .select();
 
-    addMakedChallenge(data[0]);
+    await addMakedChallenge(data[0]);
+
     if (!error) {
       const {data: user_data, error: updateError} = await supabase
         .from('users')
@@ -41,7 +42,7 @@ function MakeChallengeComponent({userData}) {
       if (updateError) {
         console.log(updateError);
       } else {
-        navigation.navigate('Home', {userData, user_data});
+        // navigation.navigate('Home', {userData, user_data});
       }
     } else {
       console.log(error);

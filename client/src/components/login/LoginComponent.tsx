@@ -1,5 +1,5 @@
 import {Alert, Button, Image, StyleSheet, TextInput, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useDebugValue, useState} from 'react';
 import {colors} from '../../color';
 import {supabase} from '../../lib/supabase';
 import {useNavigation} from '@react-navigation/native';
@@ -14,6 +14,7 @@ function LoginComponent() {
   const addUser = useUserStore(state => state.addUser); // 수정된 부분
   const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
   const addUsedData = useUserStore(state => state.addUsedData);
+
   const fetchUserData = async userId => {
     try {
       let {data: users_data, error} = await supabase
@@ -44,23 +45,24 @@ function LoginComponent() {
       .from('users_maked_challenge')
       .select('*')
       .eq('user_id', user_data[0].user_id);
-    if (user_maked_challenge_data === null) return 0;
+
+    console.log(user_maked_challenge_data);
+    if (user_maked_challenge_data.length === 0) return 0;
     else return user_maked_challenge_data;
   };
   const getUserUsedList = async userData => {
-    // console.log(userData);
     let {data: users_data, error} = await supabase
       .from('users_maked_challenge')
       .select('*')
       // Filters
       .eq('user_id', userData[0].user_id);
 
-    // console.log(users_data, 'asd');
     let {data: usedMoneyInfo, errors} = await supabase
       .from('usedMoneyInfo')
       .select('*')
       .eq('user_data_id', users_data[0]?.challenge_id);
-    if (usedMoneyInfo === null) return 0;
+
+    if (usedMoneyInfo === null) return [];
     else return usedMoneyInfo;
   };
   const loginHandler = async () => {
@@ -88,11 +90,14 @@ function LoginComponent() {
       const challengeData = await getUserChallengeList(user_data);
       const usedData = await getUserUsedList(user_data);
 
-      // console.log(challengeData);
-      // console.log(usedData);
-
-      if (challengeData.length !== 0) addMakedChallenge(challengeData);
-      if (usedData !== 0) addUsedData(usedData);
+      console.log(challengeData);
+      console.log(usedData);
+      if (challengeData.length !== 0) {
+        addMakedChallenge(challengeData);
+      }
+      if (usedData !== []) {
+        addUsedData(usedData);
+      }
       addUser(user_data);
 
       // 로그인 후 Home으로 이동

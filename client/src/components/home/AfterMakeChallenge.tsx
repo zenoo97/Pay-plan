@@ -7,7 +7,7 @@ import {colors} from '../../color';
 function AfterMakeChallenge({userData}) {
   const userChallengeList = useUserStore(state => state.userChallengeList);
   const {challenge_name, goal_period_end, goal_period_start, goal_price} =
-    userChallengeList[0].content[0];
+    userChallengeList[0]?.content[0];
 
   return (
     <View style={styles.container}>

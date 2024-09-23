@@ -17,8 +17,9 @@ import DatePicker from 'react-native-date-picker';
 import {supabase} from '../../lib/supabase';
 import {useUserStore} from '../../store/getUser';
 
-function HomeComponent({userData, users}) {
+function HomeComponent({userData}) {
   const userChallengeList = useUserStore(state => state.userChallengeList);
+  const addUsedData = useUserStore(state => state.addUsedData);
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
@@ -55,15 +56,11 @@ function HomeComponent({userData, users}) {
         },
       ])
       .select();
-
+    addUsedData(data);
     if (errors) {
       console.error('Error inserting used money info:', errors);
     }
   };
-
-  useEffect(() => {
-    // getUsersData();
-  }, [userChallengeList]);
 
   return (
     <View style={styles.container}>

@@ -24,7 +24,7 @@ export const useUserStore = create(set => ({
     set(prev => ({
       userUsedData: [
         ...prev.userUsedData,
-        {content: val, id: new Date().getTime() + val},
+        ...val, // val이 배열이라면 이렇게 추가
       ],
     }));
   },

@@ -1,68 +1,53 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {supabase} from '../../lib/supabase';
+import React, {useEffect, useState, memo} from 'react';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {useUserStore} from '../../store/getUser';
+
+const ListCom = memo(({date, title, used_price}) => {
+  return (
+    <View style={styles.usedInfo}>
+      <View style={styles.dateInfo}>
+        <View>
+          <Text>{date}</Text>
+        </View>
+        <View>
+          <Text>금요일</Text>
+        </View>
+      </View>
+      <View style={styles.title}>
+        <Text style={styles.title}>{title}</Text>
+      </View>
+      <View>
+        <Text>{used_price}원</Text>
+      </View>
+    </View>
+  );
+});
 
 function ListComponent({userData}) {
-  const [usedData, setUsedData] = useState([]);
-  const [userChallengeList, setUserChallengeList] = useState([]);
-  const getUserChallengeList = async () => {
-    let {data: users_data, error} = await supabase
-      .from('users_maked_challenge')
-      .select('*')
-      .eq('user_id', userData[0].user_id);
-    setUserChallengeList(users_data);
-  };
-  const getUserUsedList = async () => {
-    let {data: users_data, error} = await supabase
-      .from('users_maked_challenge')
-      .select('*')
-      // Filters
-      .eq('user_id', userData[0].user_id);
-    // console.log(users_data);
-    let {data: usedMoneyInfo, errors} = await supabase
-      .from('usedMoneyInfo')
-      .select('*')
-      .eq('user_data_id', users_data[0].challenge_id);
-    setUsedData(usedMoneyInfo);
-  };
-  useEffect(() => {
-    getUserUsedList();
-    getUserChallengeList();
-  }, []);
+  const userUsedData = useUserStore(state => state.userUsedData);
+
+  console.log(userUsedData);
   return (
     <View style={styles.container}>
       <View style={{backgroundColor: 'red', height: 100}}>
-        {userChallengeList.map(item => (
-          <>
-            <View>
-              <Text>{item.challenge_name}</Text>
-            </View>
-          </>
-        ))}
+        {/* 추가할 내용 */}
       </View>
-      {usedData.map(item => (
-        <>
-          <View style={styles.usedInfo}>
-            <View style={styles.dateInfo}>
-              <View>
-                <Text>{item.date}</Text>
-              </View>
-              <View>
-                <Text>금요일</Text>
-              </View>
-            </View>
-            <View style={styles.title}>
-              <Text style={styles.title}>{item.title}</Text>
-            </View>
-            <View>
-              <Text>{item.used_price}원</Text>
-            </View>
-          </View>
-        </>
-      ))}
+
+      <FlatList
+        data={userUsedData}
+        renderItem={({item}) => (
+          <ListCom
+            date={item.date}
+            title={item.title}
+            used_price={item.used_price}
+          />
+        )}
+        keyExtractor={item => item.id.toString()} // id가 숫자일 경우 toString()으로 변환
+      />
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {},
   usedInfo: {
@@ -78,4 +63,5 @@ const styles = StyleSheet.create({
   },
   title: {},
 });
+
 export default ListComponent;
