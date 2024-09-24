@@ -4,10 +4,22 @@ import {useUserStore} from '../../store/getUser';
 import AnimatedProgressWheel from 'react-native-progress-wheel';
 import {colors} from '../../color';
 
-function AfterMakeChallenge({userData}) {
+function AfterMakeChallenge() {
+  // userChallengeList가 비어 있지 않은지 확인
   const userChallengeList = useUserStore(state => state.userChallengeList);
-  const {challenge_name, goal_period_end, goal_period_start, goal_price} =
-    userChallengeList[0]?.content[0];
+
+  // 초기 변수 정의
+  let challenge_name, goal_period_end, goal_period_start, goal_price;
+
+  if (userChallengeList.length > 0) {
+    // userChallengeList[0]에서 데이터를 가져옴
+    ({challenge_name, goal_period_end, goal_period_start, goal_price} =
+      userChallengeList[0]);
+    console.log(
+      userChallengeList[0],
+      '유저 챌린지 리스트 in AfterMakeChallenge',
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -21,11 +33,13 @@ function AfterMakeChallenge({userData}) {
         />
         <View style={styles.challengeInfo}>
           <View>
-            <Text style={styles.challengeNameText}>{challenge_name}</Text>
+            <Text style={styles.challengeNameText}>
+              {challenge_name} {/* challenge_name 출력 */}
+            </Text>
           </View>
           <View>
             <Text style={styles.challengeDateText}>
-              {goal_period_start} - {goal_period_end}
+              {goal_period_start} - {goal_period_end} {/* 기간 출력 */}
             </Text>
           </View>
         </View>

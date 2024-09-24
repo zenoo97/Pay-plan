@@ -19,6 +19,7 @@ import {useUserStore} from '../../store/getUser';
 
 function HomeComponent({userData}) {
   const userChallengeList = useUserStore(state => state.userChallengeList);
+  console.log(userChallengeList, '유저 챌린지 리스트 in HomeComponent');
   const addUsedData = useUserStore(state => state.addUsedData);
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -67,7 +68,10 @@ function HomeComponent({userData}) {
       {userChallengeList?.length === 0 ? (
         <BeforeMakeChallenge userData={userData} />
       ) : (
-        <AfterMakeChallenge userData={userData} />
+        <AfterMakeChallenge
+          userData={userData}
+          userChallengeList={userChallengeList}
+        />
       )}
       <View style={styles.centeredView}>
         <Modal
@@ -97,7 +101,7 @@ function HomeComponent({userData}) {
                   <View>
                     <Text>날짜</Text>
                   </View>
-                  <View>
+                  <View style={{flex: 0.87}}>
                     <Button
                       title={`${date.toLocaleDateString('ko-KR')}`}
                       onPress={() => setOpen(true)}

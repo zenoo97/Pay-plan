@@ -77,7 +77,6 @@ function SignUpScreen({navigation}) {
         return;
       } else {
         Alert.alert('회원가입이 완료되었습니다.');
-        // console.log(data);
         navigation.navigate('Login');
       }
     } else {

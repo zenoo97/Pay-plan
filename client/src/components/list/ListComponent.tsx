@@ -26,7 +26,7 @@ const ListCom = memo(({date, title, used_price}) => {
 function ListComponent({userData}) {
   const userUsedData = useUserStore(state => state.userUsedData);
 
-  console.log(userUsedData);
+  console.log(userUsedData, 'in ListComponent');
   return (
     <View style={styles.container}>
       <View style={{backgroundColor: 'red', height: 100}}>

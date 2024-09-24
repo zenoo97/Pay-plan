@@ -6,26 +6,17 @@ export const useUserStore = create(set => ({
   userUsedData: [],
   addUser: val => {
     set(prev => ({
-      userData: [
-        ...prev.userData,
-        {content: val, id: new Date().getTime() + val},
-      ],
+      userData: [...prev.userData, ...val],
     }));
   },
   addMakedChallenge: val => {
     set(prev => ({
-      userChallengeList: [
-        ...prev.userChallengeList,
-        {content: val, id: new Date().getTime() + val},
-      ],
+      userChallengeList: [...prev.userChallengeList, val],
     }));
   },
   addUsedData: val => {
     set(prev => ({
-      userUsedData: [
-        ...prev.userUsedData,
-        ...val, // val이 배열이라면 이렇게 추가
-      ],
+      userUsedData: [...prev.userUsedData, ...val],
     }));
   },
 }));

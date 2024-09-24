@@ -11,7 +11,7 @@ function LoginComponent() {
   const [password, setPassword] = useState('');
   const userData = useUserStore(state => state.userData);
 
-  const addUser = useUserStore(state => state.addUser); // 수정된 부분
+  const addUser = useUserStore(state => state.addUser);
   const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
   const addUsedData = useUserStore(state => state.addUsedData);
 
@@ -46,8 +46,7 @@ function LoginComponent() {
       .select('*')
       .eq('user_id', user_data[0].user_id);
 
-    console.log(user_maked_challenge_data);
-    if (user_maked_challenge_data.length === 0) return 0;
+    if (user_maked_challenge_data.length === 0) return [];
     else return user_maked_challenge_data;
   };
   const getUserUsedList = async userData => {
@@ -90,14 +89,15 @@ function LoginComponent() {
       const challengeData = await getUserChallengeList(user_data);
       const usedData = await getUserUsedList(user_data);
 
-      console.log(challengeData);
-      console.log(usedData);
+      console.log(challengeData, '챌린지 데이터 in loginComponent');
+      console.log(usedData, 'usedData in loginComponent');
       if (challengeData.length !== 0) {
         addMakedChallenge(challengeData);
       }
-      if (usedData !== []) {
-        addUsedData(usedData);
+      if (usedData.length !== 0) {
+        addMakedChallenge(usedData);
       }
+
       addUser(user_data);
 
       // 로그인 후 Home으로 이동

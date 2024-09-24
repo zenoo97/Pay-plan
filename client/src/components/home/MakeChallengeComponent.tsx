@@ -17,35 +17,47 @@ function MakeChallengeComponent({userData}) {
   const [open, setOpen] = useState(false);
   const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
   const addChallenge = async () => {
-    const {data, error} = await supabase
-      .from('users_maked_challenge')
-      .insert([
-        {
-          challenge_name: challengeName,
-          goal_price: goalPrice,
-          user_id: userData[0].user_id, // user_id를 userData에서 가져옵니다
-          goal_period_start: date.toLocaleDateString('ko-KR'),
-          goal_period_end: date.toLocaleDateString('ko-KR'),
-        },
-      ])
-      .select();
+    try {
+      const {data, error} = await supabase
+        .from('users_maked_challenge')
+        .insert([
+          {
+            challenge_name: challengeName,
+            goal_price: goalPrice,
+            user_id: userData[0].user_id,
+            goal_period_start: date.toLocaleDateString('ko-KR'),
+            goal_period_end: date.toLocaleDateString('ko-KR'),
+          },
+        ])
+        .select();
 
-    await addMakedChallenge(data[0]);
+      if (error) {
+        console.log('챌린지 추가 오류:', error);
+        Alert.alert('챌린지 추가 오류', '챌린지를 추가하는 데 실패했습니다.');
+        return; // 오류가 발생하면 함수 종료
+      }
 
-    if (!error) {
+      // 데이터가 성공적으로 추가된 경우
+      await addMakedChallenge(data[0]); // data가 비어있지 않은지 확인 필요
+
       const {data: user_data, error: updateError} = await supabase
         .from('users')
         .update({current_challenge_num: data[0].challenge_id})
-        .eq('user_id', userData[0].user_id) // user_id를 직접 문자열로 사용
+        .eq('user_id', userData[0].user_id)
         .select();
 
       if (updateError) {
-        console.log(updateError);
+        console.log('유저 업데이트 오류:', updateError);
+        Alert.alert(
+          '유저 업데이트 오류',
+          '유저 정보를 업데이트하는 데 실패했습니다.',
+        );
       } else {
-        // navigation.navigate('Home', {userData, user_data});
+        navigation.navigate('Home', {userData, user_data});
       }
-    } else {
-      console.log(error);
+    } catch (err) {
+      console.error('addChallenge 오류:', err);
+      Alert.alert('오류', '챌린지를 추가하는 중 오류가 발생했습니다.');
     }
   };
   return (
