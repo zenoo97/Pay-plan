@@ -129,8 +129,13 @@ function HomeComponent({userData}) {
                   <View>
                     <TextInput
                       style={styles.input}
-                      value={usedPrice}
                       onChangeText={setUsedPrice}
+                      value={
+                        usedPrice ? Number(usedPrice).toLocaleString() : ''
+                      }
+                      placeholder="사용 금액"
+                      maxLength={15}
+                      keyboardType="numeric"
                     />
                   </View>
                 </View>

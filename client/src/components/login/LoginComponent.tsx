@@ -1,5 +1,5 @@
 import {Alert, Button, Image, StyleSheet, TextInput, View} from 'react-native';
-import React, {useDebugValue, useState} from 'react';
+import React, {useState} from 'react';
 import {colors} from '../../color';
 import {supabase} from '../../lib/supabase';
 import {useNavigation} from '@react-navigation/native';
@@ -9,11 +9,8 @@ function LoginComponent() {
   const navigation = useNavigation();
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
-  const userData = useUserStore(state => state.userData);
-
   const addUser = useUserStore(state => state.addUser);
   const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
-  const addUsedData = useUserStore(state => state.addUsedData);
 
   const fetchUserData = async userId => {
     try {
