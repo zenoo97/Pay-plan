@@ -129,8 +129,15 @@ function HomeComponent({userData}) {
                   <View>
                     <TextInput
                       style={styles.input}
-                      value={usedPrice}
-                      onChangeText={setUsedPrice}
+                      value={
+                        usedPrice ? Number(usedPrice).toLocaleString() : ''
+                      }
+                      onChangeText={text =>
+                        setUsedPrice(text.replace(/[^0-9]/g, ''))
+                      }
+                      placeholder="사용 금액"
+                      maxLength={15}
+                      keyboardType="numeric"
                     />
                   </View>
                 </View>
@@ -274,10 +281,11 @@ const styles = StyleSheet.create({
     width: 200,
   },
   paymentButton: {
+    width: 50,
     padding: 10,
     borderRadius: 5,
     backgroundColor: '#f0f0f0',
-    marginHorizontal: 5,
+    // marginHorizontal: 5,
   },
   selectedButton: {
     backgroundColor: '#2196F3', // 선택된 버튼을 강조하는 색상

@@ -13,19 +13,19 @@ function HomeScreen({route}) {
   return (
     <Tab.Navigator screenOptions={{headerShown: false}}>
       <Tab.Screen
-        name="HomeTab"
+        name="홈"
         children={() => <HomeComponent userData={userData} />} // userData를 전달
       />
       <Tab.Screen
-        name="ListTab"
+        name="리스트"
         children={() => <ListComponent userData={userData} />} // userData를 전달
       />
       <Tab.Screen
-        name="ChartTab"
+        name="차트"
         children={() => <ChartComponent userData={userData} />} // userData를 전달
       />
       <Tab.Screen
-        name="MoreTab"
+        name="더보기"
         children={() => <MoreComponent userData={userData} />} // userData를 전달
       />
     </Tab.Navigator>
