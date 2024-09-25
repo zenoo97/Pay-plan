@@ -7,14 +7,9 @@ import {colors} from '../../color';
 function AfterMakeChallenge() {
   // userChallengeList가 비어 있지 않은지 확인
   const userChallengeList = useUserStore(state => state.userChallengeList);
-  const userUsedData = useUserStore(state => state.userUsedData);
+
   // 초기 변수 정의
   let challenge_name, goal_period_end, goal_period_start, goal_price;
-
-  console.log(userUsedData, '유저 사용 금액 in AfterMakeChallenge');
-  let totalUsedPrice = userUsedData.reduce((total, item) => {
-    return total + Number(item.used_price); // used_price를 숫자로 변환하여 합산
-  }, 0);
 
   if (userChallengeList.length > 0) {
     // userChallengeList[0]에서 데이터를 가져옴
@@ -25,18 +20,7 @@ function AfterMakeChallenge() {
       '유저 챌린지 리스트 in AfterMakeChallenge',
     );
   }
-  let usedGoalPricePercent = (
-    (totalUsedPrice / Number(goal_price)) *
-    100
-  ).toFixed(1);
 
-  const endDate = new Date(goal_period_end);
-  const startDate = new Date(goal_period_start);
-  const today = new Date();
-
-  // 남은 일수 계산
-  const remainingDays = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
-  const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
   return (
     <View style={styles.container}>
       <View>
@@ -44,16 +28,18 @@ function AfterMakeChallenge() {
           size={300}
           width={20}
           color={colors.blueText}
-          progress={Number(usedGoalPricePercent)}
+          progress={45}
           backgroundColor={colors.input}
         />
         <View style={styles.challengeInfo}>
           <View>
-            <Text style={styles.challengeNameText}>{challenge_name}</Text>
+            <Text style={styles.challengeNameText}>
+              {challenge_name} {/* challenge_name 출력 */}
+            </Text>
           </View>
           <View>
             <Text style={styles.challengeDateText}>
-              {goal_period_start} - {goal_period_end}
+              {goal_period_start} - {goal_period_end} {/* 기간 출력 */}
             </Text>
           </View>
         </View>
@@ -61,28 +47,19 @@ function AfterMakeChallenge() {
       <View style={styles.usedInfo}>
         <View>
           <Text style={styles.goalPriceText}>
-            목표 금액의{' '}
-            <Text style={styles.goalPricePercentText}>
-              {usedGoalPricePercent}%
-            </Text>
-            를 사용했어요.
+            목표 금액의 45%를 사용했어요.
           </Text>
         </View>
         <View style={styles.dateInfoText}>
           <View>
             <Text style={styles.latesDateText}>
-              남은 일수:{' '}
-              <Text style={styles.latesDayText}>{remainingDays}일</Text> /{' '}
-              {totalDays}일
+              남은 일수: <Text style={styles.latesDayText}>4일</Text> / 7일
             </Text>
           </View>
           <View>
             <Text style={styles.latesPriceText}>
-              잔액:{' '}
-              <Text style={styles.latePriceText}>
-                {totalUsedPrice.toLocaleString()}원
-              </Text>{' '}
-              / {Number(goal_price).toLocaleString()}원
+              잔액: <Text style={styles.latePriceText}>135,000원</Text> /{' '}
+              {goal_price}
             </Text>
           </View>
         </View>
@@ -119,21 +96,15 @@ const styles = StyleSheet.create({
   },
   usedInfo: {
     alignItems: 'center',
-    gap: 40,
+    gap: 20,
   },
   goalPriceText: {
     color: colors.blackText,
     fontSize: 20,
     fontWeight: 'bold',
   },
-  goalPricePercentText: {
-    color: colors.blueText,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
   dateInfoText: {
     alignItems: 'center',
-    gap: 10,
   },
   latesDayText: {
     color: colors.blueText,
