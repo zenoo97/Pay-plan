@@ -23,10 +23,9 @@ function AfterMakeChallenge() {
       '유저 챌린지 리스트 in AfterMakeChallenge',
     );
   }
-  let usedGoalPricePercent = (
-    (totalUsedPrice / Number(goal_price)) *
-    100
-  ).toFixed(1);
+  let usedGoalPricePercent = goal_price
+    ? (totalUsedPrice / Number(goal_price)) * 100
+    : 0;
   const endDate = new Date(goal_period_end);
   const startDate = new Date(goal_period_start);
   const today = new Date();
@@ -59,7 +58,11 @@ function AfterMakeChallenge() {
       <View style={styles.usedInfo}>
         <View>
           <Text style={styles.goalPriceText}>
-            목표 금액의 {usedGoalPricePercent}%를 사용했어요.
+            목표 금액의{' '}
+            <Text style={styles.goalPricePercent}>
+              {usedGoalPricePercent.toFixed(1)}%
+            </Text>
+            를 사용했어요.
           </Text>
         </View>
         <View style={styles.dateInfoText}>
@@ -117,6 +120,11 @@ const styles = StyleSheet.create({
   },
   goalPriceText: {
     color: colors.blackText,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  goalPricePercent: {
+    color: colors.blueText,
     fontSize: 20,
     fontWeight: 'bold',
   },

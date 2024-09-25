@@ -129,7 +129,9 @@ function HomeComponent({userData}) {
                   <View>
                     <TextInput
                       style={styles.input}
-                      onChangeText={setUsedPrice}
+                      onChangeText={text =>
+                        setUsedPrice(text.replace(/[^0-9]/g, ''))
+                      }
                       value={
                         usedPrice ? Number(usedPrice).toLocaleString() : ''
                       }
