@@ -11,7 +11,7 @@ function LoginComponent() {
   const [password, setPassword] = useState('');
   const addUser = useUserStore(state => state.addUser);
   const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
-
+  const addUsedData = useUserStore(state => state.addUsedData);
   const fetchUserData = async userId => {
     try {
       let {data: users_data, error} = await supabase
@@ -86,13 +86,13 @@ function LoginComponent() {
       const challengeData = await getUserChallengeList(user_data);
       const usedData = await getUserUsedList(user_data);
 
-      console.log(challengeData, '챌린지 데이터 in loginComponent');
-      console.log(usedData, 'usedData in loginComponent');
+      // console.log(challengeData, '챌린지 데이터 in loginComponent');
+      // console.log(usedData, 'usedData in loginComponent');
       if (challengeData.length !== 0) {
         addMakedChallenge(challengeData);
       }
       if (usedData.length !== 0) {
-        addMakedChallenge(usedData);
+        addUsedData(usedData);
       }
 
       addUser(user_data);

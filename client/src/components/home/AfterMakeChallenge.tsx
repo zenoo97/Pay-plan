@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {useUserStore} from '../../store/getUser';
 import AnimatedProgressWheel from 'react-native-progress-wheel';
@@ -17,9 +24,9 @@ function AfterMakeChallenge() {
   if (userChallengeList.length > 0) {
     // userChallengeList[0]에서 데이터를 가져옴
     ({challenge_name, goal_period_end, goal_period_start, goal_price} =
-      userChallengeList[0]);
+      userChallengeList[0][0]);
     console.log(
-      userChallengeList[0],
+      userChallengeList[0][0],
       '유저 챌린지 리스트 in AfterMakeChallenge',
     );
   }
@@ -33,7 +40,10 @@ function AfterMakeChallenge() {
   // 남은 일수 계산
   const remainingDays = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
   const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-  console.log(challenge_name);
+
+  const giveUpBtnHandler = () => {
+    Alert.alert('챌린지를 포기하시겠습니까?');
+  };
   return (
     <View style={styles.container}>
       <View>
@@ -53,6 +63,18 @@ function AfterMakeChallenge() {
               {goal_period_start} - {goal_period_end}
             </Text>
           </View>
+        </View>
+      </View>
+      <View style={styles.changeContainer}>
+        <View style={styles.challengeChange}>
+          <TouchableOpacity style={styles.changeBtn} onPress={giveUpBtnHandler}>
+            <Text style={styles.changeBtnText}>포기하기</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.challengeChange}>
+          <TouchableOpacity style={styles.changeBtn}>
+            <Text style={styles.changeBtnText}>수정하기</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.usedInfo}>
@@ -79,7 +101,7 @@ function AfterMakeChallenge() {
               <Text style={styles.latePriceText}>
                 {(goal_price - totalUsedPrice).toLocaleString()}원
               </Text>{' '}
-              / {Number(goal_price).toLocaleString()}
+              / {Number(goal_price).toLocaleString()}원
             </Text>
           </View>
         </View>
@@ -93,6 +115,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     gap: 20,
+  },
+  changeContainer: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  challengeChange: {},
+  changeBtn: {
+    width: 100,
+    height: 40,
+    backgroundColor: colors.inputGreyColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  changeBtnText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   circleImg: {
     width: 350,
