@@ -2,6 +2,7 @@ import React, {useEffect, useState, memo} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {useUserStore} from '../../store/getUser';
 import {colors} from '../../color';
+import DropDown from '../../shared/DropDown';
 
 const ListCom = memo(({date, title, used_price}) => {
   const formatDate = dateString => {
@@ -51,7 +52,8 @@ function ListComponent({userData}) {
   return (
     <View style={styles.container}>
       <View style={styles.usedList}>
-        <Text style={styles.usedListText}>현재까지 사용 내역</Text>
+        {/* <Text style={styles.usedListText}>현재까지 사용 내역</Text> */}
+        <DropDown />
       </View>
 
       <FlatList
@@ -75,10 +77,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   usedList: {
-    backgroundColor: colors.btn,
-    height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
   usedListText: {
     fontSize: 20,
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flex: 1,
-    alignItems: 'center',
+    marginLeft: 50,
   },
   title: {},
 });

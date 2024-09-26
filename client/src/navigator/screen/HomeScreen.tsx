@@ -25,7 +25,7 @@ function HomeScreen({route}) {
         children={() => <ChartComponent userData={userData} />} // userData를 전달
       />
       <Tab.Screen
-        name="더보기"
+        name="MY"
         children={() => <MoreComponent userData={userData} />} // userData를 전달
       />
     </Tab.Navigator>
