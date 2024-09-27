@@ -4,20 +4,37 @@ export const useUserStore = create(set => ({
   userData: [], // 초기 상태
   userChallengeList: [],
   userUsedData: [],
+  userChallengeListAllData: [],
+  addUserChallengeListAllData: val => {
+    set(prev => ({
+      userChallengeListAllData: [val],
+    }));
+  },
+  resetChallenge: () => {
+    set({userChallengeList: []}); // userChallengeList를 빈 배열로 초기화
+  },
   addUser: val => {
     set(prev => ({
       userData: [...prev.userData, ...val],
     }));
   },
+  updateUserData: val => {
+    set({
+      userData: val, // 기존의 userData를 덮어쓰도록 수정
+    });
+  },
   addMakedChallenge: val => {
     set(prev => ({
-      userChallengeList: [...prev.userChallengeList, val],
+      userChallengeList: [val], // 단일 객체를 배열로 감싸서 추가
     }));
   },
   addUsedData: val => {
     set(prev => ({
       userUsedData: [...prev.userUsedData, ...val],
     }));
+  },
+  resetChallenge: () => {
+    set({userChallengeList: []}); // userChallengeList를 빈 배열로 초기화
   },
 }));
 

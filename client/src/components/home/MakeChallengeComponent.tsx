@@ -16,17 +16,31 @@ import {useUserStore} from '../../store/getUser';
 import React from 'react';
 import GoBackBtn from '../../shared/GoBackBtn';
 
-function MakeChallengeComponent({userData}) {
+function MakeChallengeComponent() {
+  const userData = useUserStore(state => state.userData);
   const navigation = useNavigation();
   const [challengeName, setChallengeName] = useState('');
   const [goalPrice, setGoalPrice] = useState(0);
-  const [date, setDate] = useState(new Date());
   const [goalStartDate, setGoalStartDate] = useState(new Date());
   const [goalEndDate, setGoalEndDate] = useState(new Date());
   const [goalStartOpen, setGoalStartOpen] = useState(false);
   const [goalEndOpen, setGoalEndOpen] = useState(false);
   const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
+  const updateUserData = useUserStore(state => state.updateUserData);
+  const addUserChallengeListAllData = useUserStore(
+    state => state.addUserChallengeListAllData,
+  );
   let startDate, endDate;
+  const getUserChallengeListAllData = async () => {
+    let {data: user_maked_challenge_data, error} = await supabase
+      .from('users_maked_challenge')
+      .select('*')
+      .eq('user_id', userData[0].user_id);
+    console.log(userData[0], 'ddddd');
+
+    addUserChallengeListAllData(user_maked_challenge_data);
+    console.log(user_maked_challenge_data);
+  };
   const addChallenge = async () => {
     try {
       const {data, error} = await supabase
@@ -38,10 +52,11 @@ function MakeChallengeComponent({userData}) {
             user_id: userData[0].user_id,
             goal_period_start: goalStartDate.toISOString().split('T')[0],
             goal_period_end: goalEndDate.toISOString().split('T')[0],
+            current_status: true,
           },
         ])
         .select();
-
+      await getUserChallengeListAllData();
       if (error) {
         console.log('챌린지 추가 오류:', error);
         Alert.alert('챌린지 추가 오류', '챌린지를 추가하는 데 실패했습니다.');
@@ -49,6 +64,7 @@ function MakeChallengeComponent({userData}) {
       }
 
       // 데이터가 성공적으로 추가된 경우
+
       await addMakedChallenge(data[0]); // data가 비어있지 않은지 확인 필요
 
       const {data: user_data, error: updateError} = await supabase
@@ -57,6 +73,7 @@ function MakeChallengeComponent({userData}) {
         .eq('user_id', userData[0].user_id)
         .select();
 
+      updateUserData(user_data);
       if (updateError) {
         console.log('유저 업데이트 오류:', updateError);
         Alert.alert(

@@ -12,6 +12,9 @@ function LoginComponent() {
   const addUser = useUserStore(state => state.addUser);
   const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
   const addUsedData = useUserStore(state => state.addUsedData);
+  const addUserChallengeListAllData = useUserStore(
+    state => state.addUserChallengeListAllData,
+  );
   const fetchUserData = async userId => {
     try {
       let {data: users_data, error} = await supabase
@@ -38,6 +41,15 @@ function LoginComponent() {
     }
   };
   const getUserChallengeList = async user_data => {
+    let {data: user_maked_challenge_data, error} = await supabase
+      .from('users_maked_challenge')
+      .select('*')
+      .eq('user_id', user_data[0].user_id);
+
+    if (user_maked_challenge_data.length === 0) return [];
+    else return user_maked_challenge_data;
+  };
+  const getUserChallengeListAllData = async user_data => {
     let {data: user_maked_challenge_data, error} = await supabase
       .from('users_maked_challenge')
       .select('*')
@@ -85,16 +97,23 @@ function LoginComponent() {
 
       const challengeData = await getUserChallengeList(user_data);
       const usedData = await getUserUsedList(user_data);
-
+      const userChallengeListAllData = await getUserChallengeListAllData(
+        user_data,
+      );
       // console.log(challengeData, '챌린지 데이터 in loginComponent');
       // console.log(usedData, 'usedData in loginComponent');
       if (challengeData.length !== 0) {
-        addMakedChallenge(challengeData);
+        const user_challenge_data = challengeData.filter(
+          item => item.current_status === true,
+        );
+        addMakedChallenge(user_challenge_data);
       }
       if (usedData.length !== 0) {
         addUsedData(usedData);
       }
-
+      if (userChallengeListAllData.length !== 0) {
+        addUserChallengeListAllData(userChallengeListAllData);
+      }
       addUser(user_data);
 
       // 로그인 후 Home으로 이동

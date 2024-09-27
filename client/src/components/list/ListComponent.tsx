@@ -47,8 +47,8 @@ const ListCom = memo(({date, title, used_price}) => {
 function ListComponent({userData}) {
   const userUsedData = useUserStore(state => state.userUsedData);
   const userChallengeList = useUserStore(state => state.userChallengeList);
-  console.log(userChallengeList, '챌린지 리스트 in list컴포넌트');
-  console.log(userChallengeList, 'in ListComponent');
+  // console.log(userChallengeList, '챌린지 리스트 in list컴포넌트');
+  // console.log(userChallengeList, 'in ListComponent');
   return (
     <View style={styles.container}>
       <View style={styles.usedList}>

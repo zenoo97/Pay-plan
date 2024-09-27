@@ -1,7 +1,16 @@
 import React, {useState} from 'react';
-import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  Alert,
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {colors} from '../../color';
 import {supabase} from '../../lib/supabase';
+import GoBackBtn from '../../shared/GoBackBtn';
 
 function SignUpScreen({navigation}) {
   const [nickName, setNickName] = useState('');
@@ -15,6 +24,10 @@ function SignUpScreen({navigation}) {
   });
 
   const idCheck = async id => {
+    if (!id) {
+      Alert.alert('아이디를 입력해주세요.');
+      return;
+    }
     const {data: users, error} = await supabase.from('users').select('id');
     if (error) {
       console.error('Error fetching users:', error);
@@ -37,6 +50,10 @@ function SignUpScreen({navigation}) {
   };
 
   const nickNameCheck = async nickName => {
+    if (!nickName) {
+      Alert.alert('닉네임을 입력해주세요.');
+      return;
+    }
     const {data: users, error} = await supabase
       .from('users')
       .select('nickname');
@@ -85,23 +102,17 @@ function SignUpScreen({navigation}) {
   };
   return (
     <View style={styles.container}>
-      <View style={{width: 100, height: 50}}>
-        <Button
-          title="←"
-          style={styles.backBtn}
-          onPress={() => navigation.goBack()}
-        />
+      <GoBackBtn />
+      <View style={styles.title}>
+        <Text style={styles.titleText}>회원가입</Text>
       </View>
       <View style={styles.signUpContainer}>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>회원가입</Text>
-        </View>
         <View style={styles.infoContainer}>
           <View style={styles.infoBox}>
             <View>
               <Text style={styles.texts}>닉네임</Text>
             </View>
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+            <View style={styles.inputCheck}>
               <View>
                 <TextInput style={styles.input} onChangeText={setNickName} />
               </View>
@@ -125,7 +136,7 @@ function SignUpScreen({navigation}) {
             <View>
               <Text style={styles.texts}>아이디</Text>
             </View>
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+            <View style={styles.inputCheck}>
               <View>
                 <TextInput style={styles.input} onChangeText={setId} />
               </View>
@@ -140,32 +151,40 @@ function SignUpScreen({navigation}) {
               </Text>
             </View>
           </View>
-          <View style={styles.infoBox}>
+          <View style={{gap: 10}}>
             <View>
               <Text style={styles.texts}>비밀번호</Text>
             </View>
-            <View>
-              <TextInput style={styles.input} onChangeText={setPassword} />
+            <View style={styles.infoBoxNamerge}>
+              <View>
+                <TextInput
+                  style={styles.inputNamerge}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                />
+              </View>
             </View>
           </View>
-          <View style={styles.infoBox}>
-            <View>
-              <Text style={styles.texts}>비밀번호 확인</Text>
-              {password === passwordConfirm ? (
-                <Text>비밀번호가 같습니다.</Text>
-              ) : (
-                <Text>비밀번호가 다릅니다.</Text>
-              )}
-            </View>
+          <View>
+            <Text style={styles.texts}>비밀번호 확인</Text>
+          </View>
+          <View style={styles.infoBoxNamerge}>
             <View>
               <TextInput
-                style={styles.input}
+                style={styles.inputNamerge}
                 onChangeText={setPasswordConfirm}
               />
             </View>
           </View>
+          {password === passwordConfirm ? (
+            <Text style={{color: 'green'}}>비밀번호가 같습니다.</Text>
+          ) : (
+            <Text>비밀번호가 다릅니다.</Text>
+          )}
           <View style={styles.btn}>
-            <Button title="완료" onPress={insertUserData} />
+            <TouchableOpacity style={styles.finishBtn} onPress={insertUserData}>
+              <Text style={styles.finishBtnText}>완료</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -176,16 +195,12 @@ function SignUpScreen({navigation}) {
 export default SignUpScreen;
 
 const styles = StyleSheet.create({
-  container: {},
-  backBtn: {
-    width: 100,
-    height: 50,
+  container: {
+    flex: 1,
+    paddingHorizontal: 15,
   },
   signUpContainer: {
     gap: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
   },
   titleText: {
     fontSize: 20,
@@ -197,20 +212,50 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.blackText,
   },
+  inputCheck: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+
   input: {
-    width: 328,
     height: 40,
     borderRadius: 10,
+    width: 300,
     backgroundColor: colors.inputGreyColor,
   },
   infoContainer: {
-    alignItems: 'center',
-    gap: 30,
+    gap: 10,
   },
   infoBox: {
     gap: 10,
   },
-  btn: {
+  infoBoxNamerge: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  inputNamerge: {
+    width: 380,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: colors.inputGreyColor,
+  },
+  finishBtn: {
     width: 100,
+    height: 50,
+    backgroundColor: colors.blueText,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  btn: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  finishBtnText: {
+    fontSize: 20,
+    color: colors.input,
+    fontWeight: 'bold',
   },
 });
