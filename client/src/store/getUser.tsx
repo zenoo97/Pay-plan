@@ -25,7 +25,7 @@ export const useUserStore = create(set => ({
   },
   addMakedChallenge: val => {
     set(prev => ({
-      userChallengeList: [val], // 단일 객체를 배열로 감싸서 추가
+      userChallengeList: [...prev.userChallengeList, val], // 기존 리스트에 추가
     }));
   },
   addUsedData: val => {

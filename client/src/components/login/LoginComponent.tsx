@@ -106,7 +106,7 @@ function LoginComponent() {
         const user_challenge_data = challengeData.filter(
           item => item.current_status === true,
         );
-        addMakedChallenge(user_challenge_data);
+        user_challenge_data.forEach(item => addMakedChallenge(item)); // 각 항목을 개별적으로 추가
       }
       if (usedData.length !== 0) {
         addUsedData(usedData);

@@ -27,10 +27,10 @@ function AfterMakeChallenge() {
     // userChallengeList[0]에서 데이터를 가져옴
     ({challenge_name, goal_period_end, goal_period_start, goal_price} =
       userChallengeList[0]);
-    // console.log(
-    //   userChallengeList[0],
-    //   // '유저 챌린지 리스트 in AfterMakeChallenges',
-    // );
+    console.log(
+      userChallengeList[0],
+      '유저 챌린지 리스트 in AfterMakeChallenges',
+    );
   }
   let usedGoalPricePercent = goal_price
     ? (totalUsedPrice / Number(goal_price)) * 100
