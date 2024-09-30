@@ -5,6 +5,7 @@ export const useUserStore = create(set => ({
   userChallengeList: [],
   userUsedData: [],
   userChallengeListAllData: [],
+  selectedChallengeList: [],
   addUserChallengeListAllData: val => {
     set(prev => ({
       userChallengeListAllData: [val],
@@ -36,6 +37,7 @@ export const useUserStore = create(set => ({
   resetChallenge: () => {
     set({userChallengeList: []}); // userChallengeList를 빈 배열로 초기화
   },
+  setSelectedChallengeList: val => set({selectedChallengeList: val}),
 }));
 
 // 챌린지를 눌렀을 때 데이터를 가져와야 한다

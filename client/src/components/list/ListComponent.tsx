@@ -47,17 +47,22 @@ const ListCom = memo(({date, title, used_price}) => {
 function ListComponent({userData}) {
   const userUsedData = useUserStore(state => state.userUsedData);
   const userChallengeList = useUserStore(state => state.userChallengeList);
+  const selectedChallengeList = useUserStore(
+    state => state.selectedChallengeList,
+  );
   // console.log(userChallengeList, '챌린지 리스트 in list컴포넌트');
   // console.log(userChallengeList, 'in ListComponent');
+
+  console.log(selectedChallengeList);
+  useEffect(() => {}, [selectedChallengeList]);
   return (
     <View style={styles.container}>
       <View style={styles.usedList}>
         {/* <Text style={styles.usedListText}>현재까지 사용 내역</Text> */}
         <DropDown />
       </View>
-
       <FlatList
-        data={userUsedData}
+        data={selectedChallengeList}
         renderItem={({item}) => (
           <ListCom
             date={item.date}

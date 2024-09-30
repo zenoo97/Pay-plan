@@ -18,12 +18,14 @@ import {supabase} from '../../lib/supabase';
 import {useUserStore} from '../../store/getUser';
 import AddUsedPriceModal from '../../shared/AddUsedPriceModal';
 
-function HomeComponent({userData}) {
+function HomeComponent() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const userChallengeList = useUserStore(state => state.userChallengeList);
 
   // console.log(userChallengeList, '유저 챌린지 리스트 in HomeComponent');
+
+  const userData = useUserStore(state => state.userData);
 
   return (
     <View style={styles.container}>

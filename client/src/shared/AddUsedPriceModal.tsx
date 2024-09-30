@@ -14,7 +14,7 @@ import DatePicker from 'react-native-date-picker';
 import {colors} from '../color';
 import {useUserStore} from '../store/getUser';
 import {supabase} from '../lib/supabase';
-function AddUsedPriceModal({userData, setModalVisible, modalVisible}) {
+function AddUsedPriceModal({setModalVisible, modalVisible}) {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [usedType, setUsedType] = useState('');
@@ -26,36 +26,54 @@ function AddUsedPriceModal({userData, setModalVisible, modalVisible}) {
     setUsedType(type);
   };
 
+  const userData = useUserStore(state => state.userData);
+  console.log(userData[0], '체크체크');
   const addUsedMoneyInfo = async () => {
-    let {data: users_data, error} = await supabase
-      .from('users_maked_challenge')
-      .select('*')
-      .eq('user_id', userData[0]?.user_id);
+    try {
+      let {data: users_data, error} = await supabase
+        .from('users_maked_challenge')
+        .select('*')
+        .eq('user_id', userData[0]?.user_id);
 
-    if (error) {
-      console.error('Error fetching users data:', error);
-      return;
-    }
+      if (error) {
+        console.error('Error fetching users data:', error);
+        Alert.alert(
+          '데이터 조회 오류',
+          '챌린지 데이터를 가져오는 데 실패했습니다.',
+        );
+        return;
+      }
 
-    const {data, errors} = await supabase
-      .from('usedMoneyInfo')
-      .insert([
-        {
-          user_id: userData[0]?.user_id,
-          user_password: userData[0]?.user_password,
-          title: title,
-          date: date.toLocaleDateString('ko-KR'),
-          used_price: usedPrice,
-          type: usedType,
-          user_data_id: users_data[0].challenge_id,
-        },
-      ])
-      .select();
-    addUsedData(data);
-    if (errors) {
-      console.error('Error inserting used money info:', errors);
+      const {data, error: insertError} = await supabase
+        .from('usedMoneyInfo')
+        .insert([
+          {
+            user_id: userData[0]?.user_id,
+            title: title,
+            date: date.toLocaleDateString('ko-KR'),
+            used_price: usedPrice,
+            type: usedType,
+            user_data_id: userData[0].current_challenge_num,
+          },
+        ])
+        .select();
+
+      if (insertError) {
+        console.error('Error inserting used money info:', insertError);
+        Alert.alert(
+          '데이터 추가 오류',
+          '사용 금액 정보를 추가하는 데 실패했습니다.',
+        );
+        return;
+      }
+
+      addUsedData(data);
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      Alert.alert('서버 오류', '예기치 않은 오류가 발생했습니다.');
     }
   };
+
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -150,8 +168,8 @@ function AddUsedPriceModal({userData, setModalVisible, modalVisible}) {
               <View>
                 <Pressable
                   style={[styles.button, styles.buttonClose]}
-                  onPress={() => {
-                    addUsedMoneyInfo();
+                  onPress={async () => {
+                    await addUsedMoneyInfo();
                     setModalVisible(!modalVisible);
                   }}>
                   <Text style={styles.textStyle}>확인</Text>
