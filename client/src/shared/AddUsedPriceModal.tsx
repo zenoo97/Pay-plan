@@ -27,7 +27,6 @@ function AddUsedPriceModal({setModalVisible, modalVisible}) {
   };
 
   const userData = useUserStore(state => state.userData);
-  console.log(userData[0], '체크체크');
   const addUsedMoneyInfo = async () => {
     try {
       let {data: users_data, error} = await supabase

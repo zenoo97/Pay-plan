@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useUserStore} from '../../store/getUser';
 import AnimatedProgressWheel from 'react-native-progress-wheel';
 import {colors} from '../../color';
@@ -92,6 +92,55 @@ function AfterMakeChallenge() {
     );
   };
   const reviseChallengeHandler = () => {};
+  // 챌린지 매니저 코드
+  const updateChallengeStatus = async (challengeId, isSuccess) => {
+    const {error} = await supabase
+      .from('users')
+      .update({current_challenge_num: null}) // 상태 업데이트
+      .eq('current_challenge_num', challengeId);
+
+    if (error) {
+      console.error('첫 번째 업데이트 오류:', error);
+    } else {
+      console.log('첫 번째 업데이트 성공');
+    }
+    const status = isSuccess ? 'success' : 'failure';
+    const {error: errors} = await supabase
+      .from('users_maked_challenge')
+      .update({current_status: false, challenge_result: status}) // 상태 업데이트
+      .eq('challenge_id', challengeId);
+
+    if (errors) {
+      console.error('두 번째 업데이트 오류:', errors);
+    } else {
+      console.log(`챌린지 ${challengeId} 상태 업데이트 완료: ${status}`);
+    }
+  };
+  const checkChallenges = async () => {
+    const today = new Date();
+    const todayString = today.toISOString().split('T')[0]; // 현재 날짜
+
+    const end_date = new Date(userChallengeList[0].goal_period_end);
+    endDate.setDate(end_date.getDate() + 1); // 하루 더하기
+    const newEndDateString = endDate.toISOString().split('T')[0]; // 새로운 종료 날짜
+
+    console.log(newEndDateString);
+    // console.log(userChallengeList[0].goal_period_end);
+    // 챌린지의 종료 날짜와 비교
+    if (newEndDateString === todayString) {
+      await updateChallengeStatus(
+        userChallengeList[0].challenge_id,
+        goal_price - totalUsedPrice > 0 ? false : true,
+      ); // 종료 처리
+      await resetChallenge(); // 챌린지 리스트에서 제거
+    }
+  };
+
+  useEffect(() => {
+    if (remainingDays === -1) {
+      checkChallenges();
+    }
+  }, [remainingDays]);
   return (
     <View style={styles.container}>
       <View>
