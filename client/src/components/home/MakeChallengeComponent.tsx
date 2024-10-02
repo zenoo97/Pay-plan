@@ -15,6 +15,8 @@ import {useNavigation} from '@react-navigation/native';
 import {useUserStore} from '../../store/getUser';
 import React from 'react';
 import GoBackBtn from '../../shared/GoBackBtn';
+import ComponentTitle from '../../shared/ComponentTitle';
+import {height, scale, width} from '../../shared/phoneSize';
 
 function MakeChallengeComponent() {
   const userData = useUserStore(state => state.userData);
@@ -90,12 +92,7 @@ function MakeChallengeComponent() {
   };
   return (
     <View style={styles.container}>
-      <View>
-        <View>
-          <GoBackBtn />
-        </View>
-        <Text style={styles.challengeAddText}>챌린지 추가</Text>
-      </View>
+      <ComponentTitle values="챌린지 추가" />
       <View style={styles.infoContainer}>
         <View style={styles.challengeNameiInfo}>
           <View>
@@ -185,11 +182,11 @@ function MakeChallengeComponent() {
             />
           </View>
         </View>
-      </View>
-      <View style={styles.endBtn}>
-        <TouchableOpacity style={styles.addBtn} onPress={addChallenge}>
-          <Text style={styles.addBtnText}>완료</Text>
-        </TouchableOpacity>
+        <View style={styles.endBtn}>
+          <TouchableOpacity style={styles.addBtn} onPress={addChallenge}>
+            <Text style={styles.addBtnText}>완료</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -197,15 +194,17 @@ function MakeChallengeComponent() {
 
 export default MakeChallengeComponent;
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    height: '110%',
+  },
   challengeAddText: {
-    fontSize: 20,
+    fontSize: 20 * scale,
     color: colors.blueText,
     paddingHorizontal: 10,
   },
   inputTitleText: {
     color: colors.blackText,
-    fontSize: 20,
+    fontSize: 23 * scale,
     fontWeight: 'bold',
   },
   datePicker: {
@@ -214,45 +213,51 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   dateInput: {
-    width: 170,
-    height: 50,
-    borderWidth: 2,
-    borderColor: colors.inputGreyColor,
+    width: 250 * width,
+    height: 50 * height,
+    borderWidth: 1 * width,
+    borderColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
   },
   infoContainer: {
-    padding: 10,
     gap: 50,
     alignItems: 'center',
+    borderTopLeftRadius: 30 * width,
+    borderTopRightRadius: 30 * height,
+    position: 'relative',
+    backgroundColor: 'white',
+    marginTop: -20,
+    zIndex: 2,
   },
   challengeNameiInfo: {
-    gap: 10,
+    gap: 30,
+    paddingVertical: 30,
   },
   goalPeriodStartInput: {},
   goalPeriodEndInput: {},
   goalPriceInput: {
-    width: 356,
+    width: 520 * width,
+    height: 50 * height,
     borderRadius: 10,
     backgroundColor: colors.inputGreyColor,
   },
   inputInfo: {
-    gap: 20,
+    gap: 20 * height,
   },
   goalPriceInfo: {
-    gap: 10,
+    gap: 10 * height,
   },
   endBtn: {
-    flex: 1,
     alignItems: 'center',
     marginTop: 50,
   },
   addBtn: {
-    width: 133,
-    height: 46,
+    width: 133 * width,
+    height: 46 * height,
     backgroundColor: colors.blueText,
-    borderRadius: 10,
+    borderRadius: 10 * width,
     justifyContent: 'center',
     alignItems: 'center',
   },

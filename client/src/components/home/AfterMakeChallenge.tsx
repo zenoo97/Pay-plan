@@ -12,7 +12,7 @@ import AnimatedProgressWheel from 'react-native-progress-wheel';
 import {colors} from '../../color';
 import {supabase} from '../../lib/supabase';
 
-function AfterMakeChallenge() {
+function AfterMakeChallenge({setModalVisible}) {
   // userChallengeList가 비어 있지 않은지 확인
   const userChallengeList = useUserStore(state => state.userChallengeList);
   const resetChallenge = useUserStore(state => state.resetChallenge);
@@ -104,7 +104,7 @@ function AfterMakeChallenge() {
     } else {
       console.log('첫 번째 업데이트 성공');
     }
-    const status = isSuccess ? 'success' : 'failure';
+    const status = isSuccess ? 'failure' : 'success';
     const {error: errors} = await supabase
       .from('users_maked_challenge')
       .update({current_status: false, challenge_result: status}) // 상태 업데이트
@@ -204,6 +204,13 @@ function AfterMakeChallenge() {
             </Text>
           </View>
         </View>
+        <View style={styles.bottomBtnContainer}>
+          <TouchableOpacity
+            style={styles.bottomBtn}
+            onPress={() => setModalVisible(true)}>
+            <Text style={styles.plusText}>+</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -286,6 +293,23 @@ const styles = StyleSheet.create({
   latePriceText: {
     color: colors.blueText,
     fontSize: 19,
+  },
+  bottomBtnContainer: {
+    position: 'absolute',
+    bottom: -70, // 원하는 위치로 조정
+    right: -40,
+  },
+  bottomBtn: {
+    width: 50,
+    height: 50,
+    borderRadius: 100,
+    backgroundColor: colors.blueText,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  plusText: {
+    fontSize: 30,
+    color: 'white',
   },
 });
 export default AfterMakeChallenge;

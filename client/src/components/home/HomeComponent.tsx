@@ -17,21 +17,23 @@ import DatePicker from 'react-native-date-picker';
 import {supabase} from '../../lib/supabase';
 import {useUserStore} from '../../store/getUser';
 import AddUsedPriceModal from '../../shared/AddUsedPriceModal';
+import GoBackBtn from '../../shared/GoBackBtn';
 
 function HomeComponent() {
   const [modalVisible, setModalVisible] = useState(false);
   const userChallengeList = useUserStore(state => state.userChallengeList);
   const userData = useUserStore(state => state.userData);
-  const resetChallenge = useUserStore(state => state.resetChallenge);
 
   return (
     <View style={styles.container}>
+      <GoBackBtn />
       {userChallengeList?.length === 0 ? (
         <BeforeMakeChallenge userData={userData} />
       ) : (
         <AfterMakeChallenge
           userData={userData}
           userChallengeList={userChallengeList}
+          setModalVisible={setModalVisible}
         />
       )}
       <AddUsedPriceModal
@@ -39,13 +41,6 @@ function HomeComponent() {
         setModalVisible={setModalVisible}
         modalVisible={modalVisible}
       />
-      <View style={styles.bottomBtnContainer}>
-        <TouchableOpacity
-          style={styles.bottomBtn}
-          onPress={() => setModalVisible(true)}>
-          <Text style={styles.plusText}>+</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -57,22 +52,5 @@ const styles = StyleSheet.create({
     flex: 1, // 부모 컨테이너가 전체 화면을 차지하도록 함
     alignItems: 'center',
     paddingVertical: 20,
-  },
-  bottomBtnContainer: {
-    position: 'absolute',
-    bottom: 20, // 원하는 위치로 조정
-    right: 20,
-  },
-  bottomBtn: {
-    width: 50,
-    height: 50,
-    borderRadius: 100,
-    backgroundColor: colors.blueText,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  plusText: {
-    fontSize: 30,
-    color: 'white',
   },
 });

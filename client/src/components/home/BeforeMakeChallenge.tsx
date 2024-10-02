@@ -9,6 +9,7 @@ import {
 import React, {Children} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {colors} from '../../color';
+import {height, scale, width} from '../../shared/phoneSize';
 
 function BeforeMakeChallenge({userData}) {
   const navigation = useNavigation();
@@ -17,7 +18,7 @@ function BeforeMakeChallenge({userData}) {
   };
   return (
     <View style={styles.container}>
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+      <View style={styles.btnContainer}>
         <Image source={require('../../../public/images/circle.png')} />
         <View style={styles.challengeAdd}>
           <View>
@@ -30,61 +31,36 @@ function BeforeMakeChallenge({userData}) {
           </View>
         </View>
       </View>
-
-      <View style={styles.addInfo}>
-        <View>
-          <Text style={styles.infoOne}>
-            돈이 한정되어 있거나 소비를 줄여야 하나요?
-          </Text>
-        </View>
-        <View>
-          <Text style={styles.infoTwo}>목표 기간과 금액을 설정해 보세요.</Text>
-        </View>
-      </View>
     </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    flex: 1,
-    gap: 30,
+    backgroundColor: 'red',
   },
-  challengeAdd: {
-    position: 'absolute',
-    top: 110,
+  btnContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  challengeAdd: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   addBtn: {
-    width: 40,
-    height: 40,
+    width: 60 * width,
+    height: 50 * height,
     borderColor: colors.inputGreyColor,
-    borderWidth: 1,
+    borderWidth: 1 * width,
     justifyContent: 'center',
     alignItems: 'center',
   },
   plusText: {
-    fontSize: 18,
+    fontSize: 18 * scale,
     fontWeight: 'bold',
   },
   addChallengeText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colors.blackText,
-  },
-  addInfo: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 20,
-  },
-  infoOne: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.blackText,
-  },
-  infoTwo: {
-    fontSize: 16,
+    fontSize: 16 * scale,
     fontWeight: 'bold',
     color: colors.blackText,
   },

@@ -118,6 +118,7 @@ function LoginComponent() {
 
       // 로그인 후 Home으로 이동
       navigation.navigate('Home', {userData: user_data});
+      // navigation.navigate('ChallengeResult');
     } catch (err) {
       console.error('loginHandler 에러:', err);
       Alert.alert('로그인 오류', '로그인 중 오류가 발생했습니다.');

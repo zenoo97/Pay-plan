@@ -1,0 +1,10 @@
+import {Dimensions} from 'react-native';
+export const FIGMA_WINDOW_WIDTH = 594;
+export const FIGMA_WINDOW_HEIGHT = 812;
+export const FIGMA_SCALE = Math.sqrt(FIGMA_WINDOW_WIDTH * FIGMA_WINDOW_HEIGHT);
+export const WIDTH = Dimensions.get('screen').width;
+export const HEIGHT = Dimensions.get('screen').height;
+export const fonts = {};
+export const width = WIDTH / FIGMA_WINDOW_WIDTH;
+export const height = HEIGHT / FIGMA_WINDOW_HEIGHT;
+export const scale = Math.sqrt(WIDTH * HEIGHT) / FIGMA_SCALE;
