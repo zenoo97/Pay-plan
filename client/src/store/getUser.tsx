@@ -1,6 +1,7 @@
 import {create} from 'zustand';
+import {UserStore} from '../model/signUp';
 
-export const useUserStore = create(set => ({
+export const useUserStore = create<UserStore>(set => ({
   userData: [], // 초기 상태
   userChallengeList: [],
   userUsedData: [],

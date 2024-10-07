@@ -4,17 +4,19 @@ import {colors} from '../../color';
 import {supabase} from '../../lib/supabase';
 import {useNavigation} from '@react-navigation/native';
 import {useUserStore} from '../../store/getUser';
+import ChallengeManager from '../../shared/ChallengeManager';
 
-function LoginComponent() {
+const LoginComponent: React.FC = () => {
   const navigation = useNavigation();
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
+  const [id, setId] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const addUser = useUserStore(state => state.addUser);
   const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
   const addUsedData = useUserStore(state => state.addUsedData);
   const addUserChallengeListAllData = useUserStore(
     state => state.addUserChallengeListAllData,
   );
+  const userChallengeList = useUserStore(state => state.userChallengeList);
   const fetchUserData = async userId => {
     try {
       let {data: users_data, error} = await supabase
@@ -117,6 +119,8 @@ function LoginComponent() {
       addUser(user_data);
 
       // 로그인 후 Home으로 이동
+      // ChallengeManager();
+      console.log(userChallengeList);
       navigation.navigate('Home', {userData: user_data});
       // navigation.navigate('ChallengeResult');
     } catch (err) {
@@ -149,7 +153,7 @@ function LoginComponent() {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
