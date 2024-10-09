@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {
   Alert,
+  Button,
   StyleSheet,
   Text,
   TextInput,
@@ -13,44 +14,34 @@ import {supabase} from '../../lib/supabase';
 import {useNavigation} from '@react-navigation/native';
 import {useUserStore} from '../../store/getUser';
 import React from 'react';
+import GoBackBtn from '../../shared/GoBackBtn';
 import ComponentTitle from '../../shared/ComponentTitle';
 import {height, scale, width} from '../../shared/phoneSize';
-import {UserStore} from '../../model/signUp';
 
-const MakeChallengeComponent: React.FC = () => {
-  // const userData = useUserStore(state => state.userData);
-  // const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
-  // const updateUserData = useUserStore(state => state.updateUserData);
-  // const addUserChallengeListAllData = useUserStore(
-  //   state => state.addUserChallengeListAllData,
-  // );
-  const {
-    userData,
-    addMakedChallenge,
-    updateUserData,
-    addUserChallengeListAllData,
-  } = useUserStore<UserStore>(state => ({
-    userData: state.userData,
-    addMakedChallenge: state.addMakedChallenge,
-    updateUserData: state.updateUserData,
-    addUserChallengeListAllData: state.addUserChallengeListAllData,
-  }));
+function MakeChallengeComponent() {
+  const userData = useUserStore(state => state.userData);
   const navigation = useNavigation();
-  const [challengeName, setChallengeName] = useState<string>('');
-  const [goalPrice, setGoalPrice] = useState<number>(0);
-  const [goalStartDate, setGoalStartDate] = useState<Date>(new Date());
-  const [goalEndDate, setGoalEndDate] = useState<Date>(new Date());
-  const [goalStartOpen, setGoalStartOpen] = useState<boolean>(false);
-  const [goalEndOpen, setGoalEndOpen] = useState<boolean>(false);
-
+  const [challengeName, setChallengeName] = useState('');
+  const [goalPrice, setGoalPrice] = useState(0);
+  const [goalStartDate, setGoalStartDate] = useState(new Date());
+  const [goalEndDate, setGoalEndDate] = useState(new Date());
+  const [goalStartOpen, setGoalStartOpen] = useState(false);
+  const [goalEndOpen, setGoalEndOpen] = useState(false);
+  const addMakedChallenge = useUserStore(state => state.addMakedChallenge);
+  const updateUserData = useUserStore(state => state.updateUserData);
+  const addUserChallengeListAllData = useUserStore(
+    state => state.addUserChallengeListAllData,
+  );
   let startDate, endDate;
   const getUserChallengeListAllData = async () => {
     let {data: user_maked_challenge_data, error} = await supabase
       .from('users_maked_challenge')
       .select('*')
       .eq('user_id', userData[0].user_id);
+    console.log(userData[0], 'ddddd');
 
     addUserChallengeListAllData(user_maked_challenge_data);
+    console.log(user_maked_challenge_data);
   };
   const addChallenge = async () => {
     try {
@@ -199,7 +190,7 @@ const MakeChallengeComponent: React.FC = () => {
       </View>
     </View>
   );
-};
+}
 
 export default MakeChallengeComponent;
 const styles = StyleSheet.create({

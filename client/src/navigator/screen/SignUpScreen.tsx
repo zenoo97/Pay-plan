@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {
   Alert,
+  Button,
+  Dimensions,
   StyleSheet,
   Text,
   TextInput,
@@ -9,22 +11,22 @@ import {
 } from 'react-native';
 import {colors} from '../../color';
 import {supabase} from '../../lib/supabase';
+import GoBackBtn from '../../shared/GoBackBtn';
 import {height, scale, width} from '../../shared/phoneSize';
 import ComponentTitle from '../../shared/ComponentTitle';
-import {CheckResultAtSignUp, SignUpScreenProps} from '../../model/signUp';
 
-const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
-  const [nickName, setNickName] = useState<string>('');
-  const [id, setId] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [passwordConfirm, setPasswordConfirm] = useState<string>('');
+function SignUpScreen({navigation}) {
+  const [nickName, setNickName] = useState('');
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
-  const [checkResults, setCheckResults] = useState<CheckResultAtSignUp>({
-    nickNameCheck: {value: '', status: false},
-    idCheck: {value: '', status: false},
+  const [checkResults, setCheckResults] = useState({
+    nickNameCheck: {value: '', status: null},
+    idCheck: {value: '', status: null},
   });
 
-  const idCheck = async () => {
+  const idCheck = async id => {
     if (!id) {
       Alert.alert('아이디를 입력해주세요.');
       return;
@@ -50,7 +52,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
     }
   };
 
-  const nickNameCheck = async () => {
+  const nickNameCheck = async nickName => {
     if (!nickName) {
       Alert.alert('닉네임을 입력해주세요.');
       return;
@@ -84,7 +86,6 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
       }));
     }
   };
-
   const insertUserData = async () => {
     if (checkResults.idCheck.status && checkResults.nickNameCheck.status) {
       const {data, error} = await supabase
@@ -106,7 +107,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
     <View style={styles.container}>
       <ComponentTitle values="회원가입" />
       <View style={styles.secondContainer}>
-        <View>
+        <View style={styles.signUpContainer}>
           <View style={styles.infoContainer}>
             <View style={styles.infoBox}>
               <View>
@@ -119,7 +120,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
                 <View>
                   <TouchableOpacity
                     style={styles.checkUser}
-                    onPress={nickNameCheck}>
+                    onPress={() => nickNameCheck(nickName)}>
                     <Text style={styles.checkUserText}>중복 여부</Text>
                   </TouchableOpacity>
                 </View>
@@ -142,7 +143,9 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
                   <TextInput style={styles.input} onChangeText={setId} />
                 </View>
                 <View>
-                  <TouchableOpacity style={styles.checkUser} onPress={idCheck}>
+                  <TouchableOpacity
+                    style={styles.checkUser}
+                    onPress={() => idCheck(id)}>
                     <Text style={styles.checkUserText}>중복 여부</Text>
                   </TouchableOpacity>
                 </View>
@@ -179,7 +182,6 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
                   <TextInput
                     style={styles.inputNamerge}
                     onChangeText={setPasswordConfirm}
-                    secureTextEntry
                   />
                 </View>
               </View>
@@ -203,7 +205,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({navigation}) => {
       </View>
     </View>
   );
-};
+}
 
 export default SignUpScreen;
 
