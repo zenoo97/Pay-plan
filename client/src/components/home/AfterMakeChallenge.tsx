@@ -11,6 +11,7 @@ import {useUserStore} from '../../store/getUser';
 import AnimatedProgressWheel from 'react-native-progress-wheel';
 import {colors} from '../../color';
 import {supabase} from '../../lib/supabase';
+import {useNavigation} from '@react-navigation/native';
 
 function AfterMakeChallenge({setModalVisible}) {
   // userChallengeList가 비어 있지 않은지 확인
@@ -91,6 +92,7 @@ function AfterMakeChallenge({setModalVisible}) {
       },
     );
   };
+  const navigation = useNavigation();
   const reviseChallengeHandler = () => {};
   // 챌린지 매니저 코드
   const updateChallengeStatus = async (challengeId, isSuccess) => {
@@ -105,15 +107,17 @@ function AfterMakeChallenge({setModalVisible}) {
       console.log('첫 번째 업데이트 성공');
     }
     const status = isSuccess ? 'failure' : 'success';
-    const {error: errors} = await supabase
+    const {data: result, error: errors} = await supabase
       .from('users_maked_challenge')
       .update({current_status: false, challenge_result: status}) // 상태 업데이트
       .eq('challenge_id', challengeId);
 
+    console.log(result, '업데이트 된 데이터');
     if (errors) {
       console.error('두 번째 업데이트 오류:', errors);
     } else {
       console.log(`챌린지 ${challengeId} 상태 업데이트 완료: ${status}`);
+      // navigation.navigate('ChallengeResult');
     }
   };
   const checkChallenges = async () => {
@@ -124,20 +128,21 @@ function AfterMakeChallenge({setModalVisible}) {
     endDate.setDate(end_date.getDate() + 1); // 하루 더하기
     const newEndDateString = endDate.toISOString().split('T')[0]; // 새로운 종료 날짜
 
-    console.log(newEndDateString);
     // console.log(userChallengeList[0].goal_period_end);
-    // 챌린지의 종료 날짜와 비교
-    if (newEndDateString === todayString) {
+    // 챌린지의 종료 날짜와 비교)
+    if (newEndDateString < todayString) {
       await updateChallengeStatus(
         userChallengeList[0].challenge_id,
         goal_price - totalUsedPrice > 0 ? false : true,
+        userChallengeList[0],
       ); // 종료 처리
       await resetChallenge(); // 챌린지 리스트에서 제거
     }
   };
+  console.log(remainingDays);
 
   useEffect(() => {
-    if (remainingDays === -1) {
+    if (remainingDays < 0) {
       checkChallenges();
     }
   }, [remainingDays]);

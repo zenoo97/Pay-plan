@@ -1,11 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Button, StyleSheet, Animated} from 'react-native';
 import Lottie from 'lottie-react-native'; // Lottie import
+import {useRoute} from '@react-navigation/native';
+import {width} from '../../shared/phoneSize';
 
 function ChallengeResultComponent() {
+  // const route = useRoute();
+  // const {updatedData} = route.params;
   const [showDetails, setShowDetails] = useState(false);
   const fadeAnim = useState(new Animated.Value(1))[0];
 
+  // console.log(userChallengeList);
   useEffect(() => {
     const timer = setTimeout(() => {
       Animated.timing(fadeAnim, {
@@ -36,7 +41,9 @@ function ChallengeResultComponent() {
 
       {showDetails && (
         <View style={styles.detailsContainer}>
-          <Text style={styles.challengeName}>일주일 만원으로 살기</Text>
+          <Text style={styles.challengeName}>
+            {/* {userChallengeList.challenge_name} */}
+          </Text>
           <Text style={styles.status}>성공적으로 완료!</Text>
           <Text style={styles.details}>
             사용한 금액: 20,000원 / 목표 금액: 150,000원
@@ -56,7 +63,7 @@ function ChallengeResultComponent() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 20 * width,
     backgroundColor: '#fff',
     borderRadius: 10,
     shadowColor: '#000',
