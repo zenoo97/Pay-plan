@@ -2,9 +2,10 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeComponent from '../../components/home/HomeComponent';
 import ListComponent from '../../components/list/ListComponent';
-import ChartComponent from '../../components/chart/ChartComponent';
+import Community from '../../components/community/Community';
 import MoreComponent from '../../components/more/MoreComponent';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const Tab = createBottomTabNavigator();
 
 function HomeScreen({route}) {
@@ -35,17 +36,13 @@ function HomeScreen({route}) {
         children={() => <ListComponent userData={userData} />} // userData를 전달
       />
       <Tab.Screen
-        name="차트"
+        name="커뮤니티"
         options={{
           tabBarIcon: ({color, size}) => (
-            <MaterialCommunityIcons
-              name="chart-areaspline"
-              color={color}
-              size={size}
-            />
+            <Ionicons name="people" color={color} size={size} />
           ),
         }}
-        children={() => <ChartComponent userData={userData} />} // userData를 전달
+        children={() => <Community userData={userData} />} // userData를 전달
       />
       <Tab.Screen
         name="MY"
