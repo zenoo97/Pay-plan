@@ -4,7 +4,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {colors} from '../../color';
 import {height, width} from '../../shared/phoneSize';
 import SuccessPostComponent from './SuccessPostComponent';
-import FailPostComponent from './failPostComponent';
+import FailPostComponent from './FailPostComponent';
 
 function Community() {
   let [btnStatus, setBtnStaus] = useState(false);

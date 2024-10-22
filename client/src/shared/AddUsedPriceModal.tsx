@@ -14,17 +14,14 @@ import DatePicker from 'react-native-date-picker';
 import {colors} from '../color';
 import {useUserStore} from '../store/getUser';
 import {supabase} from '../lib/supabase';
+import {height, scale, width} from './phoneSize';
 function AddUsedPriceModal({setModalVisible, modalVisible}) {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-  const [usedType, setUsedType] = useState('');
   const [title, setTitle] = useState('');
   const [usedPrice, setUsedPrice] = useState('');
 
   const addUsedData = useUserStore(state => state.addUsedData);
-  const handlePaymentTypeSelect = type => {
-    setUsedType(type);
-  };
 
   const userData = useUserStore(state => state.userData);
   const addUsedMoneyInfo = async () => {
@@ -51,7 +48,6 @@ function AddUsedPriceModal({setModalVisible, modalVisible}) {
             title: title,
             date: date.toLocaleDateString('ko-KR'),
             used_price: usedPrice,
-            type: usedType,
             user_data_id: userData[0].current_challenge_num,
           },
         ])
@@ -85,24 +81,15 @@ function AddUsedPriceModal({setModalVisible, modalVisible}) {
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            <View style={styles.title}>
+              <Text style={styles.titleText}>지출 기록하기</Text>
+            </View>
             <View>
-              <View style={styles.challenge}>
-                <View>
-                  <Text>세부 내용</Text>
-                </View>
-                <View>
-                  <TextInput
-                    style={styles.input}
-                    value={title}
-                    onChangeText={setTitle}
-                  />
-                </View>
-              </View>
               <View style={styles.challenge}>
                 <View>
                   <Text>날짜</Text>
                 </View>
-                <View style={{flex: 0.87}}>
+                <View>
                   <Button
                     title={`${date.toLocaleDateString('ko-KR')}`}
                     onPress={() => setOpen(true)}
@@ -142,24 +129,14 @@ function AddUsedPriceModal({setModalVisible, modalVisible}) {
               </View>
               <View style={styles.challenge}>
                 <View>
-                  <TouchableOpacity
-                    style={[
-                      styles.paymentButton,
-                      usedType === 'cash' && styles.selectedButton,
-                    ]}
-                    onPress={() => handlePaymentTypeSelect('cash')}>
-                    <Text>현금</Text>
-                  </TouchableOpacity>
+                  <Text>세부 내용</Text>
                 </View>
                 <View>
-                  <TouchableOpacity
-                    style={[
-                      styles.paymentButton,
-                      usedType === 'card' && styles.selectedButton,
-                    ]}
-                    onPress={() => handlePaymentTypeSelect('card')}>
-                    <Text>카드</Text>
-                  </TouchableOpacity>
+                  <TextInput
+                    style={styles.input}
+                    value={title}
+                    onChangeText={setTitle}
+                  />
                 </View>
               </View>
             </View>
@@ -193,15 +170,17 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
+  },
+
+  titleText: {
+    fontSize: 24 * scale,
+    fontWeight: 'bold',
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#9fdcef',
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -210,6 +189,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    gap: 30 * height,
   },
   button: {
     borderRadius: 20,
@@ -233,6 +213,8 @@ const styles = StyleSheet.create({
   },
   selectModalBtn: {
     flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
   },
   paymentButton: {
     padding: 10,
@@ -245,15 +227,16 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   challenge: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
-    alignItems: 'center',
-    columnGap: 10,
+    marginBottom: 30 * height,
+    gap: 10 * height,
   },
   input: {
     backgroundColor: colors.inputGreyColor,
-    width: 200,
+    width: 430 * width,
+    borderRadius: 10 * width,
+    backgroundColor: 'white',
   },
 });
 export default AddUsedPriceModal;
