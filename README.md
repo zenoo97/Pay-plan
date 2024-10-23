@@ -1,4 +1,4 @@
-## 페이플랜
+## 페이플랜 (11월 배포를 목표로 진행중)
 ![image](https://github.com/user-attachments/assets/751aba1b-a535-4d37-a674-daeb71736f72)
 
 
