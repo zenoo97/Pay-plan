@@ -1,5 +1,6 @@
 ## 페이플랜
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/c82ba3c7-8cae-4fda-9d08-f09124fb046b/ba16bab2-10ae-46d0-9adb-85e55501593c/image.png)
+![image](https://github.com/user-attachments/assets/751aba1b-a535-4d37-a674-daeb71736f72)
+
 
 # 📖 상세 내용
 
