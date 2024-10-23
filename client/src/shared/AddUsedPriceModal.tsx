@@ -142,14 +142,14 @@ function AddUsedPriceModal({setModalVisible, modalVisible}) {
             </View>
             <View style={styles.selectModalBtn}>
               <View>
-                <Pressable
+                <TouchableOpacity
                   style={[styles.button, styles.buttonClose]}
                   onPress={async () => {
                     await addUsedMoneyInfo();
                     setModalVisible(!modalVisible);
                   }}>
                   <Text style={styles.textStyle}>확인</Text>
-                </Pressable>
+                </TouchableOpacity>
               </View>
               <View>
                 <Pressable
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 20,
-    padding: 10,
+    padding: 15,
     elevation: 2,
   },
   buttonOpen: {
@@ -213,8 +213,8 @@ const styles = StyleSheet.create({
   },
   selectModalBtn: {
     flexDirection: 'row',
-    width: '100%',
     justifyContent: 'center',
+    gap: 20 * width,
   },
   paymentButton: {
     padding: 10,

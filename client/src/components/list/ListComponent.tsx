@@ -3,7 +3,6 @@ import {Dimensions, FlatList, StyleSheet, Text, View} from 'react-native';
 import {useUserStore} from '../../store/getUser';
 import {colors} from '../../color';
 import DropDown from '../../shared/DropDown';
-import {PieChart} from 'react-native-chart-kit';
 
 const ListCom = memo(({date, title, used_price}) => {
   const formatDate = dateString => {
@@ -45,42 +44,6 @@ const ListCom = memo(({date, title, used_price}) => {
   );
 });
 
-const chartConfig = {
-  backgroundGradientFrom: '#1E2923',
-  backgroundGradientFromOpacity: 0,
-  backgroundGradientTo: '#08130D',
-  backgroundGradientToOpacity: 0.5,
-  color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-  strokeWidth: 2, // optional, default 3
-  barPercentage: 0.5,
-  useShadowColorFromDataset: false, // optional
-};
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
-const data = [
-  {
-    name: '성공',
-    population: 2,
-    color: 'rgba(131, 167, 234, 1)',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: '실패',
-    population: 3,
-    color: 'blue',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-  {
-    name: '포기',
-    population: 5,
-    color: 'red',
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15,
-  },
-];
-
 function ListComponent({userData}) {
   const userUsedData = useUserStore(state => state.userUsedData);
   const userChallengeList = useUserStore(state => state.userChallengeList);
@@ -93,18 +56,6 @@ function ListComponent({userData}) {
   useEffect(() => {}, [selectedChallengeList]);
   return (
     <View style={styles.container}>
-      <PieChart
-        data={data}
-        width={screenWidth}
-        height={230}
-        chartConfig={chartConfig}
-        accessor={'population'}
-        backgroundColor={'transparent'}
-        paddingLeft={'30'}
-        center={[screenWidth / 50, screenHeight / 400]}
-        absolute
-      />
-
       <View style={styles.usedList}>
         <DropDown />
       </View>

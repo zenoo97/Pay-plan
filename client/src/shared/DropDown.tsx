@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {useUserStore} from '../store/getUser';
 import {supabase} from '../lib/supabase';
+import {StyleSheet} from 'react-native';
+import {colors} from '../color';
 
 function DropDown() {
   const [open, setOpen] = useState(false);
@@ -52,8 +54,16 @@ function DropDown() {
       setValue={setValue}
       zIndex={9999}
       placeholder="챌린지 선택하기"
+      style={{backgroundColor: colors.blueText}}
+      textStyle={{fontSize: 15, color: 'white', fontWeight: 'bold'}}
+      listItemLabelStyle={{color: colors.blueText}}
+      listItemContainerStyle={styles.dropdown}
     />
   );
 }
-
+const styles = StyleSheet.create({
+  dropdown: {
+    backgroundColor: '#F1FAFD',
+  },
+});
 export default DropDown;

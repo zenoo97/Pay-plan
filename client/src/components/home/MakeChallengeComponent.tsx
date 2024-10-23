@@ -117,11 +117,13 @@ function MakeChallengeComponent() {
               <TouchableOpacity
                 style={styles.dateInput}
                 onPress={() => setGoalStartOpen(true)}>
-                <Text>
-                  {startDate !== ''
-                    ? goalStartDate.toISOString().split('T')[0]
-                    : '시작일'}
-                </Text>
+                <View style={styles.dateInfo}>
+                  <Text style={styles.dateText}>
+                    {startDate !== ''
+                      ? goalStartDate.toISOString().split('T')[0]
+                      : '시작일'}
+                  </Text>
+                </View>
               </TouchableOpacity>
               <DatePicker
                 modal
@@ -143,11 +145,13 @@ function MakeChallengeComponent() {
               <TouchableOpacity
                 style={styles.dateInput}
                 onPress={() => setGoalEndOpen(true)}>
-                <Text>
-                  {endDate !== ''
-                    ? goalEndDate.toISOString().split('T')[0]
-                    : '종료일'}
-                </Text>
+                <View style={styles.dateInfo}>
+                  <Text style={styles.dateText}>
+                    {endDate !== ''
+                      ? goalEndDate.toISOString().split('T')[0]
+                      : '종료일'}
+                  </Text>
+                </View>
               </TouchableOpacity>
               <DatePicker
                 modal
@@ -204,7 +208,7 @@ const styles = StyleSheet.create({
   },
   inputTitleText: {
     color: colors.blackText,
-    fontSize: 23 * scale,
+    fontSize: 25 * scale,
     fontWeight: 'bold',
   },
   datePicker: {
@@ -220,6 +224,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
+  },
+  dateInfo: {
+    width: 110 * width,
+  },
+  dateText: {
+    fontSize: 12,
   },
   infoContainer: {
     gap: 50,

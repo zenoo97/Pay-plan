@@ -16,7 +16,7 @@ function ComponentTitle({values}) {
 }
 const styles = StyleSheet.create({
   menuTitle: {
-    backgroundColor: colors.mintColor,
+    backgroundColor: colors.blueText,
     flex: 0.3 * height,
     zIndex: 1,
     paddingHorizontal: 20 * width,
