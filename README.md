@@ -10,7 +10,8 @@
 
 </aside>
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/c82ba3c7-8cae-4fda-9d08-f09124fb046b/4d12a499-78c6-4af8-90c1-b7631b108e51/image.png)
+![image](https://github.com/user-attachments/assets/acebfe11-1c81-4655-9c8c-016e1e03d022)
+
 
 # 🛠️사용 기술 및 라이브러리
 
