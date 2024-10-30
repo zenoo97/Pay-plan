@@ -56,7 +56,7 @@ function ListComponent({userData}) {
     let value = selectedChallengeList.map(item => Number(item.used_price));
     let summary = value.reduce((a, b) => a + b, 0);
     setTotalUsedMoney(summary);
-  };
+  }; 
   // console.log(userChallengeList, '챌린지 리스트 in list컴포넌트');
   // console.log(userChallengeList, 'in ListComponent');
 

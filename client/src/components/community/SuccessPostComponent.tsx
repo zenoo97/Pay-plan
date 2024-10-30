@@ -6,6 +6,7 @@ import {supabase} from '../../lib/supabase';
 
 const SuccessPostComponent = () => {
   let [successData, setSuccessData] = useState([]);
+  let [likedPosts, setLikedPosts] = useState(new Set()); // 클릭된 포스트를 관리하는 상태
   const getUserPostData = async () => {
     let {data: users_post, error} = await supabase
       .from('users_post')
@@ -34,6 +35,28 @@ const SuccessPostComponent = () => {
     user_nickname,
   } = successData;
   console.log(successData);
+  const favoriteBtnHandler = async item => {
+    const {error} = await supabase
+      .from('users_post') // 업데이트할 테이블 이름
+      .update({favorite: item.favorite + 1}) // 좋아요 수 증가
+      .eq('id', item.id); // 특정 포스트를 식별하기 위한 조건
+
+    if (error) {
+      console.log('칭찬하기 오류:', error.message);
+    } else {
+      console.log('칭찬하기 성공:', item);
+
+      // 순서를 유지하며 상태 업데이트
+      setSuccessData(prevData =>
+        prevData.map(data =>
+          data.id === item.id ? {...data, favorite: data.favorite + 1} : data,
+        ),
+      );
+
+      // 클릭된 포스트를 상태에 추가
+      setLikedPosts(prevLiked => new Set(prevLiked).add(item.id));
+    }
+  };
   return (
     <View>
       {successData.map(item => (
@@ -65,19 +88,28 @@ const SuccessPostComponent = () => {
                   성공 소감: {item.challenge_review}
                 </Text>
               </View>
-            </View>
-            <View style={styles.cheerUp}>
-              <View>
-                <Image
-                  source={require('../../../public/images/thumb_up.png')}
-                />
-              </View>
-              <View>
-                <TouchableOpacity>
-                  <Text>칭찬하기</Text>
-                </TouchableOpacity>
+              <View style={styles.favorite}>
+                <View>
+                  <Image
+                    source={require('../../../public/images/thumb_up.png')}
+                  />
+                </View>
+                <View>
+                  <Text style={styles.favoriteNum}>{item.favorite}</Text>
+                </View>
               </View>
             </View>
+
+            <TouchableOpacity
+              style={styles.cheerUp}
+              onPress={() => favoriteBtnHandler(item)}>
+              <Image
+                source={require('../../../public/images/thumb_up.png')}
+                style={{
+                  tintColor: likedPosts.has(item.id) ? 'black' : 'gray', // 클릭 여부에 따라 색상 변경
+                }}
+              />
+            </TouchableOpacity>
           </View>
         </View>
       ))}
@@ -89,7 +121,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     borderRadius: 10 * width,
     padding: 40 * width,
-    gap: 10,
+    gap: 10 * width,
     marginBottom: 10 * height,
     borderBottomWidth: 1,
   },
@@ -125,13 +157,29 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.blackText,
   },
+  favorite: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10 * width,
+    marginTop: 10,
+  },
+  favoriteNum: {
+    fontSize: 18 * scale,
+    fontWeight: 'bold',
+    color: 'black',
+  },
   cheerUp: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#E4F1FF',
     borderRadius: 10 * width,
-    padding: 10,
+    padding: 10 * width,
+  },
+  cheerUpText: {
+    fontSize: 18 * scale,
+    fontWeight: 'bold',
+    color: 'black',
   },
 });
 

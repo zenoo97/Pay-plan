@@ -18,52 +18,27 @@ function Community() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.selectBtn}>
-        <View style={styles.successBtnContainer}>
-          <TouchableOpacity
-            style={[btnStatus ? styles.defaultBtn : styles.successBtn]}
-            onPress={successBtnHandler}>
-            <Text
-              style={[
-                btnStatus ? styles.defaultBtnText : styles.successBtnText,
-              ]}>
-              성공
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.failBtnContainer}>
-          <TouchableOpacity
-            style={[!btnStatus ? styles.defaultBtn : styles.successBtn]}
-            onPress={failBtnHandler}>
-            <Text
-              style={[
-                !btnStatus ? styles.defaultBtnText : styles.successBtnText,
-              ]}>
-              실패
-            </Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.title}>
+        <Text style={styles.titleText}>커뮤니티</Text>
       </View>
-      {btnStatus === false ? (
-        <>
-          <View style={styles.userInfo}>
-            <SuccessPostComponent />
-          </View>
-        </>
-      ) : (
-        <>
-          <View style={styles.userInfo}>
-            <FailPostComponent />
-          </View>
-        </>
-      )}
+      <View style={styles.userInfo}>
+        <SuccessPostComponent />
+      </View>
     </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 5,
+    paddingVertical: 5 * height,
+  },
+  title: {
+    paddingHorizontal: 20 * width,
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.blueText,
   },
   selectBtn: {
     flexDirection: 'row',
