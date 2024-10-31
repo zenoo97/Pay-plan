@@ -3,10 +3,14 @@ import {height, scale, width} from '../../shared/phoneSize';
 import {colors} from '../../color';
 import React, {useEffect, useState} from 'react';
 import {supabase} from '../../lib/supabase';
+import {useUserStore} from '../../store/getUser';
 
 const SuccessPostComponent = () => {
   let [successData, setSuccessData] = useState([]);
   let [likedPosts, setLikedPosts] = useState(new Set()); // 클릭된 포스트를 관리하는 상태
+  let userData = useUserStore(state => state.userData);
+  const userId = userData[0].user_id; // 현재 사용자 ID를 가져오는 방법 필요
+
   const getUserPostData = async () => {
     let {data: users_post, error} = await supabase
       .from('users_post')
@@ -18,43 +22,75 @@ const SuccessPostComponent = () => {
       return;
     }
 
-    console.log('성공 결과', users_post);
-
-    // 상태에 모든 데이터를 저장
     setSuccessData(users_post);
   };
-  useEffect(() => {
-    getUserPostData();
-  }, []);
-  let {
-    id,
-    challenge_name,
-    challenge_review,
-    favorite,
-    user_name,
-    user_nickname,
-  } = successData;
-  console.log(successData);
-  const favoriteBtnHandler = async item => {
-    const {error} = await supabase
-      .from('users_post') // 업데이트할 테이블 이름
-      .update({favorite: item.favorite + 1}) // 좋아요 수 증가
-      .eq('id', item.id); // 특정 포스트를 식별하기 위한 조건
+
+  const getUserLikes = async () => {
+    let {data: userLikes, error} = await supabase
+      .from('likes')
+      .select('post_id')
+      .eq('user_id', userId);
 
     if (error) {
-      console.log('칭찬하기 오류:', error.message);
-    } else {
-      console.log('칭찬하기 성공:', item);
+      console.log('좋아요 데이터 가져오기 오류:', error.message);
+      return;
+    }
 
-      // 순서를 유지하며 상태 업데이트
+    const likedPostIds = new Set(userLikes.map(like => like.post_id));
+    setLikedPosts(likedPostIds);
+  };
+
+  useEffect(() => {
+    getUserPostData();
+    getUserLikes(); // 사용자의 좋아요 데이터 가져오기
+  }, []);
+
+  const favoriteBtnHandler = async item => {
+    const isLiked = likedPosts.has(item.id);
+
+    if (isLiked) {
+      let newLikedPosts = new Set(likedPosts);
+      newLikedPosts.delete(item.id);
+
+      const {error} = await supabase
+        .from('likes')
+        .delete()
+        .eq('user_id', userId)
+        .eq('post_id', item.id);
+
+      if (error) {
+        console.log('좋아요 삭제 오류: ', error.message);
+      } else {
+        console.log('좋아요 삭제 성공: ', item);
+      }
+
       setSuccessData(prevData =>
         prevData.map(data =>
-          data.id === item.id ? {...data, favorite: data.favorite + 1} : data,
+          data.id === item.id ? {...data, favorite: data.favorite - 1} : data,
         ),
       );
 
-      // 클릭된 포스트를 상태에 추가
-      setLikedPosts(prevLiked => new Set(prevLiked).add(item.id));
+      setLikedPosts(newLikedPosts);
+    } else {
+      const {error} = await supabase
+        .from('likes')
+        .insert([{user_id: userId, post_id: item.id}]); // 좋아요 추가
+
+      if (error) {
+        console.log('좋아요 추가 오류:', error.message);
+      } else {
+        console.log('좋아요 추가 성공:', item);
+
+        setSuccessData(prevData =>
+          prevData.map(data =>
+            data.id === item.id ? {...data, favorite: data.favorite + 1} : data,
+          ),
+        );
+
+        let newLikedPosts = new Set(likedPosts);
+        newLikedPosts.add(item.id);
+        setLikedPosts(newLikedPosts);
+      }
     }
   };
   return (
